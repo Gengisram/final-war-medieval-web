@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#2b2620">
+  <meta name="description" content="Guerra por hexágonos. Una partida cabe en un café.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="iconos/icono-192.png">
+  <link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Final War">
+  <title>Final War: Medieval</title>
+  <!-- hasta que carga la hoja de estilos no se enseña nada (evita el parpadeo blanco del arranque) -->
+  <style>html { background: #7fa3c2; } body { visibility: hidden; }</style>
+</head>
+<body>
+  <div id="app">
+    <header id="barra">
+      <div id="barra-arriba">
+        <div id="barra-titulo">Final War: Medieval</div>
+        <div id="barra-recursos"></div>
+        <div id="barra-turno"></div>
+        <div id="barra-marcador" hidden></div>
+      </div>
+      <div id="barra-abajo">
+        <div id="barra-sistema">
+          <button id="btn-menu" class="btn">Menú</button>
+          <button id="btn-glosario" class="btn">Glosario</button>
+          <button id="btn-chat" class="btn" hidden>Chat</button>
+        </div>
+        <div id="barra-botones">
+          <button id="btn-deshacer" class="btn">Deshacer</button>
+          <button id="btn-siguiente" class="btn">Siguiente tropa</button>
+          <button id="btn-fin" class="btn btn-primario">Fin de turno</button>
+        </div>
+      </div>
+    </header>
+    <main id="mapa-cont">
+      <canvas id="mapa"></canvas>
+      <div id="aviso" hidden></div>
+      <div id="tutorial" hidden></div>
+      <div id="registro"></div>
+      <button id="btn-musica" class="mapa-boton" title="Música"></button>
+      <div id="hoja" hidden><div id="hoja-caja"></div></div>
+      <div id="burbuja" hidden></div>
+      <div id="recluta" hidden></div>
+    </main>
+  </div>
+  <div id="senal" hidden aria-hidden="true"></div>
+  <div id="modal" hidden><div id="modal-caja"></div></div>
+  <div id="inicio" hidden>
+    <div id="inicio-caja">
+      <h1 id="inicio-titulo">Final War: Medieval</h1>
+      <p id="inicio-sub"></p>
+      <canvas id="inicio-desfile" height="110"></canvas>
+      <div id="inicio-vista"></div>
+    </div>
+  </div>
+
+  <!-- Librería de la nube (cuentas y ranking). Si no carga (sin red), el juego sigue en local. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // Carga de ficheros con sello anticaché (en local el navegador cachea sin avisar).
+    (function () {
+      var V = "v=" + Date.now();
+      document.write('<link rel="stylesheet" href="pantalla/estilos.css?' + V + '">');
+      var lista = ["datos/base/version.js", "datos/base/recursos.js", "datos/base/terrenos.js", "datos/base/yacimientos.js", "datos/base/tropas.js", "datos/base/asentamientos.js", "datos/base/construcciones.js", "datos/base/tecnologias.js", "datos/base/bandos.js", "datos/base/nombresIA.js", "datos/base/medallas.js", "datos/base/heroes.js", "datos/base/objetos.js", "datos/base/misiones.js", "datos/base/campana.js", "datos/base/escenarios.js", "datos/base/dados.js", "datos/base/reglas.js", "datos/base/legal.js", "datos/base/glosario.js", "datos/base/textos.es.js", "datos/base/textos.en.js", "datos/base/traduccion.en.js", "datos/idioma.js", "datos/cargador.js", "datos/nube.config.js", "motor/azar.js", "motor/hex.js", "motor/estado.js", "motor/stats.js", "motor/territorio.js", "motor/combate.js", "motor/economia.js", "motor/victoria.js", "motor/acciones.js", "motor/motor.js", "mapa/generador.js", "mapa/hechos.js", "ia/tonta.js", "ia/normal.js", "modo/barbaros.js", "pantalla/iconos.js", "pantalla/figuras.js", "pantalla/sonido.js", "pantalla/musica.js", "pantalla/lienzo.js", "pantalla/entrada.js", "pantalla/guardado.js", "pantalla/heroe.js", "pantalla/campana.js", "pantalla/fichaAsentamiento.js", "pantalla/arbolTecnologico.js", "pantalla/glosario.js", "pantalla/resultado.js", "pantalla/repeticion.js", "pantalla/compartir.js", "pantalla/nube.js", "pantalla/duelo.js", "pantalla/inicio.js", "pantalla/tutorial.js", "pantalla/paneles.js", "pantalla/app.js"];
+      for (var i = 0; i < lista.length; i++) document.write('<script src="' + lista[i] + '?' + V + '"><\/script>');
+      // instalable y sin conexión: el service worker solo funciona en https o localhost
+      if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+        window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+      }
+    })();
+  </script>
+</body>
+</html>
