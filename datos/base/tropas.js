@@ -1,0 +1,272 @@
+// Tropas. Cada una es una "carta". Los stats son la base: el motor les suma
+// tecnologías, plus de asentamiento, terreno y habilidades al calcularlos.
+//
+// etiquetas: sirven para que tecnologías y habilidades apunten a grupos
+//   ("+1 defensa a todo lo que tenga armadura").
+// alcance 0 = cuerpo a cuerpo (ataca al vecino y recibe contraataque).
+// alcance N = dispara hasta N hexágonos sin contraataque.
+// habilidades: lista de { tipo, ...parametros, condicion } (vacía en v1).
+// bonos: ataque extra contra tropas con una etiqueta: { lanza: 15 } = +15 contra lanceros.
+// defensaContra: defensa extra cuando el atacante lleva una etiqueta: { a_distancia: 10 } = +10 contra flechas y piedras.
+window.FWM = window.FWM || {};
+FWM.datosBase = FWM.datosBase || {};
+
+FWM.datosBase.tropas = {
+  campesino: {
+    nombre: "Campesino",
+    descripcion: "La tropa básica. Barata, débil, y la única que puede fundar pueblos. Sirve para reclamar terreno y para hacer bulto en las guarniciones.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "ligera"],
+    stats: { ataque: 10, asedio: 10, defensa: 10, vida: 40, alcance: 0, movimiento: 2 },
+    tipoDano: "normal",
+    coste: { oro: 10 },
+    mantenimiento: 1,
+    requiere: [],
+    mejoraA: ["lancero", "arquero", "espadachin"],
+    puedeFundar: true,
+    disparaSinMover: false,
+    habilidades: [],
+    icono: "campesino",
+  },
+  lancero: {
+    nombre: "Lancero",
+    descripcion: "La infantería sólida. Buena defensa: va delante y aguanta los golpes. Su muro de picas castiga a la caballería (+15), pero el espadachín se le cuela dentro.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "armadura", "lanza"],
+    stats: { ataque: 20, asedio: 10, defensa: 30, vida: 60, alcance: 0, movimiento: 2 },
+    bonos: { montada: 15 },
+    tipoDano: "normal",
+    coste: { oro: 20, madera: 2 },
+    mantenimiento: 2,
+    requiere: ["milicia"],
+    mejoraA: ["caballero"],
+    puedeFundar: false,
+    disparaSinMover: false,
+    habilidades: [],
+    icono: "lancero",
+  },
+  arquero: {
+    nombre: "Arquero",
+    descripcion: "Dispara al hexágono vecino sin recibir contraataque (a dos desde una colina). Desgasta, no mata. Acuartelado, defiende desde dentro sin exponerse.",
+    etiquetas: ["a_pie", "a_distancia", "ligera"],
+    stats: { ataque: 20, asedio: 0, defensa: 10, vida: 40, alcance: 1, movimiento: 2 },
+    tipoDano: "normal",
+    coste: { oro: 20, madera: 2 },
+    mantenimiento: 2,
+    requiere: ["arqueria"],
+    mejoraA: [],
+    puedeFundar: false,
+    disparaSinMover: false,
+    habilidades: [],
+    icono: "arquero",
+  },
+  espadachin: {
+    nombre: "Espadachín",
+    descripcion: "Infantería ágil y letal. Se cuela dentro de las lanzas (+15 contra lanceros) y su rodela para flechas (+10 de defensa contra tropas a distancia), pero la carga de la caballería lo arrolla.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "armadura", "espada"],
+    stats: { ataque: 40, asedio: 10, defensa: 20, vida: 70, alcance: 0, movimiento: 2 },
+    bonos: { lanza: 15 },
+    defensaContra: { a_distancia: 10 },
+    tipoDano: "normal",
+    coste: { oro: 25, hierro: 2 },
+    mantenimiento: 3,
+    requiere: ["milicia"],
+    mejoraA: ["caballero"],
+    puedeFundar: false,
+    disparaSinMover: false,
+    habilidades: [],
+    icono: "espadachin",
+  },
+  caballero: {
+    nombre: "Caballero",
+    descripcion: "La tropa de choque. Pega fuerte, mueve dos hexágonos y aguanta mucho. Su carga arrolla a los espadachines (+15), pero teme el muro de lanzas. Cara de reclutar y de mantener.",
+    etiquetas: ["montada", "cuerpo_a_cuerpo", "armadura"],
+    stats: { ataque: 50, asedio: 10, defensa: 20, vida: 80, alcance: 0, movimiento: 4 },
+    bonos: { espada: 15 },
+    tipoDano: "normal",
+    coste: { oro: 30, hierro: 2 },
+    mantenimiento: 4,
+    requiere: ["caballeria"],
+    mejoraA: ["caballeria_pesada"],
+    puedeFundar: false,
+    disparaSinMover: false,
+    habilidades: [],
+    icono: "caballero",
+  },
+  catapulta: {
+    nombre: "Catapulta",
+    descripcion: "La máquina de asedio. Rompe murallas desde dos hexágonos y de paso golpea a la guarnición, fuera del alcance de los arqueros; no puede moverse y disparar en el mismo turno y no se defiende: hay que escoltarla.",
+    etiquetas: ["maquina", "a_distancia", "asedio"],
+    stats: { ataque: 20, asedio: 25, defensa: 0, vida: 40, alcance: 2, movimiento: 2 },
+    tipoDano: "normal",
+    coste: { oro: 40, madera: 3, hierro: 2 },
+    mantenimiento: 3,
+    requiere: ["catapulta"],
+    mejoraA: ["trabuco"], // el id sigue siendo "trabuco" para no romper partidas guardadas; se llama Trabuquete
+    puedeFundar: false,
+    disparaSinMover: true, // no puede moverse y disparar en el mismo turno
+    habilidades: [],
+    icono: "catapulta",
+  },
+  // ---- tropas de la escalera: las abre el nivel de la facción (ver `escalera` en facciones.js) ----
+  monje: {
+    nombre: "Monje",
+    descripcion: "No pelea: cura. Al acabar tu turno, cura 10 a cada tropa tuya pegada a él. Débil y sin contraataque: guárdalo detrás de la línea.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "sanador"],
+    stats: { ataque: 5, asedio: 0, defensa: 10, vida: 40, alcance: 0, movimiento: 2 },
+    tipoDano: "normal",
+    coste: { oro: 25 },
+    mantenimiento: 2,
+    requiere: [],
+    mejoraA: [], puedeFundar: false, habilidades: [],
+    cura: 10,
+    icono: "monje",
+  },
+  ballestero: {
+    nombre: "Ballestero",
+    descripcion: "Tiro tenso que atraviesa armaduras (+10 contra tropas con armadura). Como la catapulta, no puede moverse y disparar en el mismo turno.",
+    etiquetas: ["a_pie", "a_distancia"],
+    stats: { ataque: 25, asedio: 0, defensa: 10, vida: 40, alcance: 1, movimiento: 2 },
+    bonos: { armadura: 10 },
+    tipoDano: "normal",
+    coste: { oro: 30 },
+    mantenimiento: 2,
+    requiere: [],
+    mejoraA: [], puedeFundar: false, disparaSinMover: true, habilidades: [],
+    icono: "ballestero",
+  },
+  alabardero: {
+    nombre: "Alabardero",
+    descripcion: "Alabarda larga: +15 contra caballería, y el espadachín no encuentra hueco (no tiene bono contra él). Infantería de armadura, firme.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "armadura", "alabarda"],
+    stats: { ataque: 25, asedio: 10, defensa: 30, vida: 65, alcance: 0, movimiento: 2 },
+    bonos: { montada: 15 },
+    tipoDano: "normal",
+    coste: { oro: 30 },
+    mantenimiento: 3,
+    requiere: [],
+    mejoraA: ["infanteria_pesada"], puedeFundar: false, habilidades: [],
+    icono: "alabardero",
+  },
+  infanteria_pesada: {
+    nombre: "Infantería pesada",
+    descripcion: "Pared de escudos. La tropa más dura a pie: aguanta lo que le echen (+10 de defensa contra tropas a distancia) y sus mazas abren brecha en las murallas. Lenta y cara de mantener.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "armadura", "pesada"],
+    stats: { ataque: 30, asedio: 20, defensa: 45, vida: 95, alcance: 0, movimiento: 2 },
+    defensaContra: { a_distancia: 10 },
+    tipoDano: "normal",
+    coste: { oro: 45 },
+    mantenimiento: 4,
+    requiere: [],
+    mejoraA: [], puedeFundar: false, habilidades: [],
+    icono: "infanteria_pesada",
+  },
+  caballeria_pesada: {
+    nombre: "Caballería pesada",
+    descripcion: "La carga que decide la batalla. Arrolla a los espadachines (+15) y barre a arqueros y máquinas (+20). Solo el muro de lanzas la frena. Cuesta una fortuna cada turno.",
+    etiquetas: ["montada", "cuerpo_a_cuerpo", "armadura", "pesada"],
+    stats: { ataque: 60, asedio: 15, defensa: 30, vida: 100, alcance: 0, movimiento: 4 },
+    bonos: { espada: 15, a_distancia: 20 },
+    tipoDano: "normal",
+    coste: { oro: 55 },
+    mantenimiento: 5,
+    requiere: [],
+    mejoraA: [], puedeFundar: false, habilidades: [],
+    icono: "caballeria_pesada",
+  },
+  trabuco: {
+    nombre: "Trabuquete",
+    descripcion: "El derribamurallas. Golpea a tres hexágonos, fuera del alcance de todo, y tira una muralla en dos disparos. No puede moverse y disparar en el mismo turno, y en campo abierto es un blanco.",
+    etiquetas: ["maquina", "a_distancia", "asedio"],
+    stats: { ataque: 30, asedio: 45, defensa: 0, vida: 45, alcance: 3, movimiento: 2 },
+    tipoDano: "normal",
+    coste: { oro: 70 },
+    mantenimiento: 5,
+    requiere: [],
+    mejoraA: [], puedeFundar: false, disparaSinMover: true, habilidades: [],
+    icono: "trabuco",
+  },
+  // ---- unidades propias de cada facción (13 sep 2026) ----
+  // Una por facción y desde el nivel 1. Rodrigo (14 sep 2026): tienen que ser MEJORES que la tropa de siempre
+  // a la que se parecen, en todo, y el pilar del ejército de su facción; lo pagan solo con un poco más de precio. `curtida` se suma en el nivel 3 de la facción y `maestra` en el 7, con la misma
+  // forma que la tropa (stats suma, bonos suma, el resto son habilidades que mira el motor):
+  //   firme: +defensa pegada a un asentamiento propio      sanaEnCasa: cura al empezar el turno en tu tierra
+  //   auraDefensa: +defensa a las tropas propias pegadas    furia: +ataque cuanto más herida (como el nórdico)
+  //   curaAlMatar: cura al matar                            estacas: daño a la caballería que la ataca
+  //   oroPorHexEnemigo: oro por cada hexágono enemigo que pisa
+  //   trasAtaque: puede moverse después de atacar (un número = puntos; "resto" = lo que le quedaba)
+  //   contraHeridos: +ataque contra tropas heridas
+  caballero_santiago: {
+    nombre: "Caballero de Santiago", faccion: "castilla",
+    descripcion: "Caballero de una orden militar: un caballero algo mejor en todo y, pegado a un pueblo tuyo, no hay quien lo mueva (+10 de defensa). Cuesta algo más.",
+    etiquetas: ["montada", "cuerpo_a_cuerpo", "armadura"],
+    stats: { ataque: 52, asedio: 10, defensa: 24, vida: 85, alcance: 0, movimiento: 4 },
+    bonos: { espada: 15 }, firme: 10,
+    curtida: { sanaEnCasa: 5 }, maestra: { auraDefensa: 2 },
+    tipoDano: "normal", coste: { oro: 34, hierro: 2 }, mantenimiento: 4,
+    requiere: ["caballeria"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "caballero_santiago",
+  },
+  guardian_bosque: {
+    nombre: "Guardián del bosque", faccion: "eslavos",
+    descripcion: "Lancero con un gran escudo de roble: un lancero algo mejor en todo, con sus mismos +15 contra caballería, y en el bosque aguanta aún más (+5 de defensa). Cuesta algo más.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "armadura", "lanza"],
+    stats: { ataque: 22, asedio: 10, defensa: 33, vida: 64, alcance: 0, movimiento: 2 },
+    bonos: { montada: 15 }, defensaTerreno: { terrenos: ["bosque"], valor: 5 },
+    curtida: { defensaContra: { a_distancia: 10 } }, maestra: { bonos: { montada: 10 } },
+    tipoDano: "normal", coste: { oro: 23, madera: 2 }, mantenimiento: 2,
+    requiere: ["milicia"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "guardian_bosque",
+  },
+  berserker: {
+    nombre: "Berserker", faccion: "vikingos",
+    descripcion: "Guerrero que entra en trance: un espadachín algo mejor en todo, con sus mismos bonos, y cuanto más herido, más pega (+5 de ataque por cada 20 de vida perdida, hasta +15). Cuesta algo más.",
+    etiquetas: ["a_pie", "cuerpo_a_cuerpo", "espada"],
+    stats: { ataque: 43, asedio: 10, defensa: 21, vida: 72, alcance: 0, movimiento: 2 },
+    bonos: { lanza: 15 }, defensaContra: { a_distancia: 10 },
+    furia: { porVida: 20, valor: 5, tope: 15 },
+    curtida: { curaAlMatar: 15 }, maestra: { stats: { movimiento: 1 } },
+    tipoDano: "normal", coste: { oro: 28, hierro: 2 }, mantenimiento: 3,
+    requiere: ["milicia"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "berserker",
+  },
+  arquero_largo: {
+    nombre: "Arquero largo", faccion: "inglaterra",
+    descripcion: "El arco de tejo inglés: un arquero algo mejor que dispara a dos hexágonos, más lejos que cualquier otro tirador. Cuesta algo más.",
+    etiquetas: ["a_pie", "a_distancia", "ligera"],
+    stats: { ataque: 21, asedio: 0, defensa: 10, vida: 40, alcance: 2, movimiento: 2 },
+    curtida: { bonos: { montada: 10 } }, maestra: { estacas: 10 },
+    tipoDano: "normal", coste: { oro: 25, madera: 2 }, mantenimiento: 2,
+    requiere: ["arqueria"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "arquero_largo",
+  },
+  jinete_mandinga: {
+    nombre: "Jinete mandinga", faccion: "mali",
+    descripcion: "La caballería del imperio: un caballero algo mejor, que no necesita hierro. Cuesta algo más.",
+    etiquetas: ["montada", "cuerpo_a_cuerpo", "armadura"],
+    stats: { ataque: 51, asedio: 10, defensa: 21, vida: 82, alcance: 0, movimiento: 4 },
+    bonos: { espada: 15 },
+    curtida: { oroPorHexEnemigo: 2 }, maestra: { bonos: { a_distancia: 10 } },
+    tipoDano: "normal", coste: { oro: 34 }, mantenimiento: 4,
+    requiere: ["caballeria"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "jinete_mandinga",
+  },
+  mameluco: {
+    nombre: "Mameluco", faccion: "saladino",
+    descripcion: "Soldado de élite formado desde niño: un caballero algo mejor, y su cota le protege de las flechas (+10 de defensa contra tropas a distancia). Cuesta algo más.",
+    etiquetas: ["montada", "cuerpo_a_cuerpo", "armadura"],
+    stats: { ataque: 53, asedio: 15, defensa: 23, vida: 85, alcance: 0, movimiento: 4 },
+    bonos: { espada: 15 }, defensaContra: { a_distancia: 10 },
+    curtida: { trasAtaque: 2 }, maestra: { bonos: { montada: 10 } },
+    tipoDano: "normal", coste: { oro: 33, hierro: 2 }, mantenimiento: 4,
+    requiere: ["caballeria"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "mameluco",
+  },
+  arquero_caballo: {
+    nombre: "Arquero a caballo", faccion: "mongoles",
+    descripcion: "Dispara al galope: un arquero algo mejor y con el doble de movimiento. Como toda caballería, los lanceros le hacen +15. Cuesta algo más.",
+    etiquetas: ["montada", "a_distancia", "ligera"],
+    stats: { ataque: 21, asedio: 0, defensa: 10, vida: 42, alcance: 1, movimiento: 4 },
+    curtida: { trasAtaque: "resto" }, maestra: { contraHeridos: 10, stats: { alcance: 1 } }, // 15 sep 2026: dispara a 2 desde el nivel 7 (los mongoles se hundían al 39 % en nivel 10)
+    tipoDano: "normal", coste: { oro: 26, madera: 2 }, mantenimiento: 3,
+    requiere: ["arqueria", "caballeria"], mejoraA: [], puedeFundar: false, disparaSinMover: false, habilidades: [], icono: "arquero_caballo",
+  },
+};
+
+// Tabla de tipos de daño contra tipos de armadura. En v1 todo vale 1.
+// Ejemplo futuro: { flecha: { placas: 0 } } → las flechas no atraviesan placas.
+FWM.datosBase.tiposDano = {
+  normal: { nombre: "Normal", contra: {} },
+};

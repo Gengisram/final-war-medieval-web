@@ -1,0 +1,17 @@
+{
+  "name": "final-war-medieval",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Final War: Medieval — juego de estrategia por turnos sobre hexágonos",
+  "scripts": {
+    "pruebas": "node pruebas/ejecutar.js",
+    "sincronizar": "npx cap sync android",
+    "abrir-android": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@revenuecat/purchases-capacitor": "^13.5.1"
+  }
+}
