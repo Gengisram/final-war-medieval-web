@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Final War: Medieval</string>
+    <string name="title_activity_main">Final War: Medieval</string>
+    <string name="package_name">com.techyield.finalwar</string>
+    <string name="custom_url_scheme">com.techyield.finalwar</string>
+</resources>

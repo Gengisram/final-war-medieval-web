@@ -1,0 +1,343 @@
+<title>Las seis facciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Metamorphous&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+:root{
+  --suelo:#efe6d2; --hoja:#f8f2e4; --borde:#cdbd98; --tinta:#2a2419; --suave:#6b6050;
+  --acento:#8b1a1a; --mejor:#2e6b30; --peor:#9a3412; --raya:#e6dbc2;
+  --castilla:#9c2a1f; --vikingos:#3d4c57; --inglaterra:#3f6b35; --mali:#b07a1e; --saladino:#1f6b62; --mongoles:#4b4f8f; --eslavos:#6b4a2b;
+  --titulo:"Metamorphous", Georgia, "Times New Roman", serif;
+  --texto:"Alegreya", Georgia, serif;
+  --numero:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --suelo:#221e19; --hoja:#2d2721; --borde:#4a4034; --tinta:#efe6d2; --suave:#b5a78e;
+    --acento:#e07a6a; --mejor:#8cc68a; --peor:#f0a070; --raya:#3a3229;
+    --castilla:#d0574a; --vikingos:#8ea3b3; --inglaterra:#7fb070; --mali:#dca54a; --saladino:#5fb3a6; --mongoles:#9398e0; --eslavos:#b58a5c;
+  }
+}
+:root[data-theme="dark"]{
+  --suelo:#221e19; --hoja:#2d2721; --borde:#4a4034; --tinta:#efe6d2; --suave:#b5a78e;
+  --acento:#e07a6a; --mejor:#8cc68a; --peor:#f0a070; --raya:#3a3229;
+  --castilla:#d0574a; --vikingos:#8ea3b3; --inglaterra:#7fb070; --mali:#dca54a; --saladino:#5fb3a6; --mongoles:#9398e0; --eslavos:#b58a5c;
+}
+*{box-sizing:border-box}
+body{background:var(--suelo);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.55;margin:0}
+main{max-width:980px;margin:0 auto;padding:40px 22px 80px;display:grid;gap:56px}
+h1,h2,h3{font-family:var(--titulo);font-weight:400;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:44px}
+h2{font-size:28px}
+h3{font-size:20px}
+p{margin:0;max-width:66ch}
+.eti{font-family:var(--numero);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--suave)}
+.num{font-family:var(--numero);font-variant-numeric:tabular-nums}
+section{display:grid;gap:18px}
+.cabecera{display:grid;gap:12px;border-bottom:2px solid var(--tinta);padding-bottom:22px}
+.cabecera p{color:var(--suave)}
+.aviso{font-style:italic}
+
+/* escudos */
+.escudo{width:34px;height:40px;flex:none;background:var(--c);clip-path:polygon(0 0,100% 0,100% 55%,50% 100%,0 55%);display:grid;place-items:center;color:#fff;font-family:var(--titulo);font-size:16px;padding-bottom:6px}
+:root:not([data-theme="light"]) .escudo{color:#fff}
+
+/* vistazo */
+.vistazo{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--borde);border:1px solid var(--borde)}
+.vistazo > div{background:var(--hoja);padding:16px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start}
+.vistazo .escudo{grid-row:span 3}
+.vistazo b{font-family:var(--titulo);font-weight:400;font-size:18px;line-height:1.2}
+.vistazo span{color:var(--suave);font-size:15px}
+.pago{font-family:var(--numero);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.pago.gratis{color:var(--mejor)} .pago.cobra{color:var(--acento)}
+@media (max-width:760px){.vistazo{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.vistazo{grid-template-columns:1fr}}
+
+/* tablas */
+.rueda{overflow-x:auto;border:1px solid var(--borde);background:var(--hoja)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--raya)}
+thead th{font-family:var(--numero);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--suave);font-weight:500;border-bottom:1px solid var(--borde);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.hito td{background:color-mix(in srgb,var(--acento) 7%,transparent)}
+tr.hito td:first-child{box-shadow:inset 3px 0 var(--acento)}
+td.n{font-family:var(--numero);font-variant-numeric:tabular-nums;white-space:nowrap}
+.matriz td{min-width:150px;font-size:14px;line-height:1.35}
+.matriz td:first-child{min-width:0}
+.matriz th .escudo{width:20px;height:24px;font-size:10px;padding-bottom:4px;display:inline-grid;vertical-align:middle;margin-right:6px}
+.falta{color:var(--peor)}
+.comun{color:var(--suave)}
+
+/* ficha */
+.ficha{border-top:6px solid var(--c);background:var(--hoja);border-left:1px solid var(--borde);border-right:1px solid var(--borde);border-bottom:1px solid var(--borde);padding:26px 26px 28px;display:grid;gap:22px}
+.ficha-cab{display:flex;gap:16px;align-items:center}
+.ficha-cab .escudo{width:54px;height:64px;font-size:26px;padding-bottom:10px}
+.ficha-cab h2{color:var(--c)}
+.ficha-cab p{color:var(--suave);font-size:15px}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:700px){.dos{grid-template-columns:1fr}}
+.bloque{display:grid;gap:6px;align-content:start}
+.bloque h3{color:var(--c)}
+.pares{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px}
+.pares dt{font-family:var(--numero);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--suave);padding-top:3px}
+.pares dd{margin:0}
+.stats td,.stats th{padding:6px 10px;font-size:14px}
+.stats td:not(:first-child),.stats th:not(:first-child){text-align:right}
+.up{color:var(--mejor);font-weight:700}
+.down{color:var(--peor);font-weight:700}
+.balanza{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--raya);font-size:15px}
+.balanza > div{background:var(--hoja);padding:10px 12px}
+.balanza .eti{display:block;margin-bottom:2px}
+.mejoras{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--raya)}
+.mejoras > div{background:var(--hoja);padding:10px 12px;font-size:15px}
+@media (max-width:620px){.mejoras{grid-template-columns:1fr}}
+
+/* votos */
+.votos{display:grid;gap:0;border-top:1px solid var(--borde)}
+.votos > div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;padding:14px 0;border-bottom:1px solid var(--borde)}
+.votos b{font-weight:700}
+.votos p{color:var(--suave)}
+@media (max-width:620px){.votos > div{grid-template-columns:1fr;gap:4px}}
+a{color:var(--acento)}
+</style>
+
+<main>
+  <header class="cabecera">
+    <span class="eti">Final War: Medieval · Techyield LTD · programado · 13 sep 2026</span>
+    <h1>Las seis facciones</h1>
+    <p><b>14 sep 2026, Rodrigo:</b> cada unidad propia es algo mejor que la tropa de siempre en todo (sin pasarse) y el pilar de su ejército; solo la paga con un poco más de precio. Algunos textos de "mejor/peor" de abajo son del borrador anterior.</p><p>Todo lo que da cada facción, nivel a nivel, con los números del juego de hoy como referencia. Ya está programado. Los números son los que salieron de equilibrar con simulaciones (la máquina contra la máquina, más de 3.000 partidas): donde cambian respecto al primer borrador, lo dice.</p>
+  </header>
+
+  <section>
+    <span class="eti">De un vistazo</span>
+    <div class="vistazo">
+      <div style="--c:var(--castilla)"><i class="escudo">C</i><b>Corona de Castilla</b><span class="pago gratis">Gratis</span><span>Alfonso VIII · defensiva, equilibrada</span></div>
+      <div style="--c:var(--vikingos)"><i class="escudo">V</i><b>Vikingos</b><span class="pago gratis">Gratis</span><span>Harald Hardrada · ataque rápido</span></div>
+      <div style="--c:var(--inglaterra)"><i class="escudo">I</i><b>Reino de Inglaterra</b><span class="pago cobra">2,99 €</span><span>Eduardo I · a distancia</span></div>
+      <div style="--c:var(--mali)"><i class="escudo">M</i><b>Imperio de Malí</b><span class="pago cobra">2,99 €</span><span>Mansa Musa · el oro rinde más</span></div>
+      <div style="--c:var(--saladino)"><i class="escudo">S</i><b>Sultanato de Saladino</b><span class="pago cobra">2,99 €</span><span>Saladino · caballería de élite</span></div>
+      <div style="--c:var(--mongoles)"><i class="escudo">G</i><b>Imperio mongol</b><span class="pago cobra">2,99 €</span><span>Gengis Kan · movilidad total</span></div>
+      <div style="--c:var(--eslavos)"><i class="escudo">V</i><b>Tribus eslavas</b><span class="pago cobra">2,99 €</span><span>Vesna · bosque y aguante</span></div>
+    </div>
+    <p class="aviso">Las cinco de pago juntas, 10,99 €. También se consiguen con oro del héroe.</p>
+  </section>
+
+  <section>
+    <h2>La escalera, igual para todas</h2>
+    <p>Diez niveles con los mismos puntos en las seis. Los niveles marcados son hitos: ahí cada facción da algo suyo. Los demás dan las tropas de siempre, que son iguales para todos. Además, como hoy, cada subida da puntos para las mejoras del héroe y una marca en su figura.</p>
+    <div class="rueda">
+      <table>
+        <thead><tr><th>Nivel</th><th>Nombre</th><th>Puntos</th><th>Qué da</th></tr></thead>
+        <tbody>
+          <tr class="hito"><td class="n">1</td><td>Recluta</td><td class="n">0</td><td><b>Unidad propia</b> y <b>rasgo</b> de la facción</td></tr>
+          <tr><td class="n">2</td><td>Escudero</td><td class="n">400</td><td>Monje</td></tr>
+          <tr class="hito"><td class="n">3</td><td>Soldado</td><td class="n">1.200</td><td><b>Unidad propia veterana</b>: gana una habilidad</td></tr>
+          <tr><td class="n">4</td><td>Sargento</td><td class="n">2.500</td><td>Ballestero y alabardero</td></tr>
+          <tr class="hito"><td class="n">5</td><td>Caballero</td><td class="n">4.200</td><td><b>Poder del líder</b>: una vez por partida</td></tr>
+          <tr><td class="n">6</td><td>Capitán</td><td class="n">6.500</td><td>Infantería pesada y caballería pesada</td></tr>
+          <tr class="hito"><td class="n">7</td><td>Señor</td><td class="n">9.500</td><td><b>Unidad propia de élite</b>: segunda habilidad</td></tr>
+          <tr><td class="n">8</td><td>Príncipe</td><td class="n">13.000</td><td>Trabuquete</td></tr>
+          <tr><td class="n">9</td><td>Rey</td><td class="n">17.000</td><td>Armadura de gala del líder y estandarte (solo aspecto)</td></tr>
+          <tr class="hito"><td class="n">10</td><td>Emperador</td><td class="n">22.000</td><td><b>Techo de la facción</b>: el poder se usa dos veces por partida y la unidad propia se vuelve dorada</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Hoy el nivel 7 pide 14.500 puntos; con esta escalera eso cae en el nivel 8. Quien ya juega conserva sus puntos y cae en el nivel que le toque.</p>
+    <p>Cada facción <b>no tiene</b> alguna de las tropas de siempre, para que se juegue distinta. Cuando le toca un nivel con una tropa que no tiene, recibe a cambio <b>un punto de mejora extra</b>.</p>
+  </section>
+
+  <section>
+    <h2>Qué da cada nivel en cada facción</h2>
+    <div class="rueda">
+      <table class="matriz">
+        <thead><tr>
+          <th>Nv.</th>
+          <th><i class="escudo" style="--c:var(--castilla)">C</i>Castilla</th>
+          <th><i class="escudo" style="--c:var(--vikingos)">V</i>Vikingos</th>
+          <th><i class="escudo" style="--c:var(--inglaterra)">I</i>Inglaterra</th>
+          <th><i class="escudo" style="--c:var(--mali)">M</i>Malí</th>
+          <th><i class="escudo" style="--c:var(--saladino)">S</i>Saladino</th>
+          <th><i class="escudo" style="--c:var(--mongoles)">G</i>Mongoles</th>
+        </tr></thead>
+        <tbody>
+          <tr class="hito"><td class="n">1</td><td>Caballero de Santiago · Tierra de frontera</td><td>Berserker · Saqueo</td><td>Arquero largo · Tiradores</td><td>Jinete mandinga · Oro de Malí</td><td>Mameluco · Jinetes curtidos</td><td>Arquero a caballo · Estepa</td></tr>
+          <tr><td class="n">2</td><td class="comun">Monje</td><td class="comun">Monje</td><td class="comun">Monje</td><td class="comun">Monje</td><td class="comun">Monje</td><td class="comun">Monje</td></tr>
+          <tr class="hito"><td class="n">3</td><td>Sanan en su tierra</td><td>Se curan al matar</td><td>+10 contra jinetes</td><td>Oro por hexágono enemigo</td><td>Atacan y se retiran</td><td>Disparan y se mueven</td></tr>
+          <tr><td class="n">4</td><td class="comun">Ballestero y alabardero</td><td class="comun">Ballestero y alabardero</td><td><span class="comun">Alabardero</span> · <span class="falta">sin ballestero</span></td><td class="comun">Ballestero y alabardero</td><td class="comun">Ballestero y alabardero</td><td><span class="comun">Ballestero</span> · <span class="falta">sin alabardero</span></td></tr>
+          <tr class="hito"><td class="n">5</td><td>Las Navas</td><td>Furia del norte</td><td>Lluvia de flechas</td><td>Los griots</td><td>Hattin</td><td>El Yam</td></tr>
+          <tr><td class="n">6</td><td class="comun">Inf. pesada y cab. pesada</td><td><span class="comun">Inf. pesada</span> · <span class="falta">sin cab. pesada</span></td><td class="comun">Inf. pesada y cab. pesada</td><td><span class="comun">Cab. pesada</span> · <span class="falta">sin inf. pesada</span></td><td><span class="comun">Cab. pesada</span> · <span class="falta">sin inf. pesada</span></td><td><span class="comun">Cab. pesada</span> · <span class="falta">sin inf. pesada</span></td></tr>
+          <tr class="hito"><td class="n">7</td><td>Dan defensa a los de al lado</td><td>Movimiento 3</td><td>Estacas contra jinetes</td><td>+10 contra tiradores</td><td>+10 contra jinetes</td><td>+10 contra heridos</td></tr>
+          <tr><td class="n">8</td><td class="falta">Sin trabuquete</td><td class="comun">Trabuquete</td><td class="comun">Trabuquete</td><td class="falta">Sin trabuquete</td><td class="comun">Trabuquete</td><td class="comun">Trabuquete</td></tr>
+          <tr><td class="n">9</td><td class="comun">Gala y estandarte</td><td class="comun">Gala y estandarte</td><td class="comun">Gala y estandarte</td><td class="comun">Gala y estandarte</td><td class="comun">Gala y estandarte</td><td class="comun">Gala y estandarte</td></tr>
+          <tr class="hito"><td class="n">10</td><td>Poder ×2 · unidad dorada</td><td>Poder ×2 · unidad dorada</td><td>Poder ×2 · unidad dorada</td><td>Poder ×2 · unidad dorada</td><td>Poder ×2 · unidad dorada</td><td>Poder ×2 · unidad dorada</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Castilla pierde el trabuquete: aguanta como nadie, pero le cuesta tomar ciudades. Malí y los mongoles pierden dos: Malí porque tiene más oro para compensar, los mongoles porque su rasgo es el más fuerte.</p>
+  </section>
+
+  <!-- CASTILLA -->
+  <article class="ficha" style="--c:var(--castilla)">
+    <div class="ficha-cab"><i class="escudo">C</i><div><h2>Corona de Castilla</h2><p>España · gratis · líder Alfonso VIII · héroe espadachín (ya existe)</p></div></div>
+    <p>Aguanta y gana por desgaste. Es la facción para aprender: perdona errores. Si defiendes tu tierra, es muy difícil de romper; si sales lejos, pierde su ventaja.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Tierra de frontera</h3><p>Tus tropas en tu propio territorio tienen +3 de defensa.</p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>Las Navas</h3><p>Hasta tu próximo turno, todas tus tropas +5 de ataque y +5 de defensa.</p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Caballero de Santiago</h3><p>Caballero de una orden militar. Menos golpe que el caballero normal, mucho más duro.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Movim.</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Caballero de Santiago</td><td class="n up">52</td><td class="n up">24</td><td class="n up">85</td><td class="n">4</td><td class="n down">34 oro</td><td class="n">4</td></tr>
+      <tr><td class="comun">Caballero (el de siempre)</td><td class="n comun">50</td><td class="n comun">20</td><td class="n comun">80</td><td class="n comun">4</td><td class="n comun">30 oro</td><td class="n comun">4</td></tr>
+    </tbody></table></div>
+    <div class="balanza"><div><span class="eti">Mejor</span>Resiste como nadie: +10 de defensa si está pegado a un pueblo tuyo.</div><div><span class="eti">Peor</span>Pega menos y es más caro.</div></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtida</span>Si empieza el turno en tu territorio, cura 5.</div><div><span class="eti">Nivel 7 · maestra</span>Las tropas pegadas a él, +2 de defensa.</div><div><span class="eti">No tiene</span><span class="falta">Trabuquete</span>. Le cuesta asaltar ciudades.</div></div>
+  </article>
+
+  <!-- VIKINGOS -->
+  <article class="ficha" style="--c:var(--vikingos)">
+    <div class="ficha-cab"><i class="escudo">V</i><div><h2>Vikingos</h2><p>Noruega · gratis · líder Harald Hardrada · héroe nórdico (ya existe)</p></div></div>
+    <p>Golpea primero y fuerte, y vive de lo que saquea. Es el contrapunto de Castilla entre las gratis: si no avanza, se queda sin oro; si avanza bien, arrasa.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Saqueo</h3><p>Al conquistar un asentamiento te llevas su oro: 15 un pueblo, 25 una ciudad o un castillo.</p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>Furia del norte</h3><p>Hasta tu próximo turno, todas tus tropas a pie +10 de ataque.</p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Berserker</h3><p>Guerrero que entra en trance. Cuanto más herido, más pega. Casi sin armadura.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Movim.</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Berserker</td><td class="n up">43</td><td class="n up">21</td><td class="n up">72</td><td class="n">2</td><td class="n down">28 oro</td><td class="n">3</td></tr>
+      <tr><td class="comun">Espadachín (el de siempre)</td><td class="n comun">40</td><td class="n comun">20</td><td class="n comun">70</td><td class="n comun">2</td><td class="n comun">25 oro</td><td class="n comun">3</td></tr>
+    </tbody></table></div>
+    <div class="balanza"><div><span class="eti">Mejor</span>Furia: +5 de ataque por cada 20 de vida perdida, hasta +15. Herido es temible.</div><div><span class="eti">Peor</span>Defensa bajísima: los arqueros lo destrozan antes de que llegue.</div></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtida</span>Cuando mata a una tropa, cura 15.</div><div><span class="eti">Nivel 7 · maestra</span>Movimiento 3.</div><div><span class="eti">No tiene</span><span class="falta">Caballería pesada</span>. Su fuerza es a pie.</div></div>
+  </article>
+
+  <!-- INGLATERRA -->
+  <article class="ficha" style="--c:var(--inglaterra)">
+    <div class="ficha-cab"><i class="escudo">I</i><div><h2>Reino de Inglaterra</h2><p>Reino Unido · 2,99 € · líder Eduardo I · héroe arquero (ya existe)</p></div></div>
+    <p>Gana sin que el enemigo llegue a tocarle. Pide colocar bien las tropas: con un muro de lanceros delante, sus arqueros no tienen rival; si les llega la caballería, caen como moscas.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Tiradores</h3><p>Todas tus tropas a distancia, +3 de ataque.</p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>Lluvia de flechas</h3><p>Hasta tu próximo turno, todas tus tropas a distancia disparan un hexágono más lejos.</p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Arquero largo</h3><p>El arco de tejo inglés: más alcance que cualquier otro tirador del juego.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Alcance</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Arquero largo</td><td class="n up">21</td><td class="n">10</td><td class="n">40</td><td class="n up">2</td><td class="n down">25 oro</td><td class="n">2</td></tr>
+      <tr><td class="comun">Arquero (el de siempre)</td><td class="n comun">20</td><td class="n comun">10</td><td class="n comun">40</td><td class="n comun">1</td><td class="n comun">20 oro</td><td class="n comun">2</td></tr>
+    </tbody></table></div>
+    <div class="balanza"><div><span class="eti">Mejor</span>Dispara a dos hexágonos: ataca sin recibir respuesta de casi nadie.</div><div><span class="eti">Peor</span>Si le alcanzan cuerpo a cuerpo, muere enseguida. Caro de mantener.</div></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtida</span>+10 de ataque contra tropas montadas.</div><div><span class="eti">Nivel 7 · maestra</span>Estacas: la caballería que le ataca recibe 10 de daño.</div><div><span class="eti">No tiene</span><span class="falta">Ballestero</span>. El arco largo lo sustituye.</div></div>
+  </article>
+
+  <!-- MALI -->
+  <article class="ficha" style="--c:var(--mali)">
+    <div class="ficha-cab"><i class="escudo">M</i><div><h2>Imperio de Malí</h2><p>Malí · 2,99 € · líder Mansa Musa · héroe nuevo</p></div></div>
+    <p>Gana con la bolsa. Mansa Musa pasa por ser el hombre más rico de la historia, y en tu juego el oro lo mueve todo. Malí saca más oro y lo gasta mejor: su ejército es más numeroso aunque cada tropa pegue menos.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Oro de Malí</h3><p>Ganas un 8 % más de oro cada turno. <i>(Era un 15 %: con eso Malí ganaba 7 de cada 10 partidas.)</i></p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>Los griots</h3><p>Los cantores del Mansa levantan el ánimo: todas tus tropas recuperan 15 de vida al momento. <i>(La peregrinación daba oro de golpe y desequilibraba todo.)</i></p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Jinete mandinga</h3><p>La caballería ligera del imperio. Cuesta la mitad de mantener.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Movim.</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Jinete mandinga</td><td class="n up">51</td><td class="n up">21</td><td class="n up">82</td><td class="n">4</td><td class="n down">34 oro</td><td class="n">4</td></tr>
+      <tr><td class="comun">Caballero (el de siempre)</td><td class="n comun">50</td><td class="n comun">20</td><td class="n comun">80</td><td class="n comun">4</td><td class="n comun">30 oro</td><td class="n comun">4</td></tr>
+    </tbody></table></div>
+    <div class="balanza"><div><span class="eti">Mejor</span>Más barato: con el oro de tres caballeros tienes casi cuatro jinetes.</div><div><span class="eti">Peor</span>Uno contra uno pierde contra cualquier caballería.</div></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtido</span>Cada hexágono enemigo que pisa te da 2 de oro.</div><div><span class="eti">Nivel 7 · maestro</span>+10 de ataque contra tropas a distancia.</div><div><span class="eti">No tiene</span><span class="falta">Infantería pesada ni trabuquete</span>. Asedia mal.</div></div>
+    <div class="bloque"><span class="eti">Héroe nuevo</span><h3>Mansa</h3><p>Cuerpo a cuerpo. Ataque 26 · defensa 20 · vida 70 · movimiento 2. Cada tropa enemiga que derrota te da 5 de oro. Aura: +1 de defensa a las tropas pegadas. <i>(Su aura era "no pagan mantenimiento" y rompía el equilibrio.)</i></p></div>
+  </article>
+
+  <!-- SALADINO -->
+  <article class="ficha" style="--c:var(--saladino)">
+    <div class="ficha-cab"><i class="escudo">S</i><div><h2>Sultanato de Saladino</h2><p>Egipto y Siria · 2,99 € · líder Saladino · héroe alquimista (ya existe)</p></div></div>
+    <p>Pocas tropas, pero las mejores. Todo gira en torno a una caballería carísima que no se puede perder. El héroe alquimista encaja: los ejércitos de Saladino usaban lanzadores de nafta, y la palabra alquimia viene del árabe.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Jinetes curtidos</h3><p>Tus tropas montadas curan 5 más cuando descansan.</p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>Hattin</h3><p>La sed: todas las tropas enemigas pegadas a las tuyas pierden 10 de vida (sin bajar de 1).</p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Mameluco</h3><p>Soldado de élite formado desde niño. La caballería más completa del juego desde la primera partida.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Movim.</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Mameluco</td><td class="n up">53</td><td class="n up">23</td><td class="n up">85</td><td class="n">4</td><td class="n down">33 oro</td><td class="n">4</td></tr>
+      <tr><td class="comun">Caballero (el de siempre)</td><td class="n comun">50</td><td class="n comun">20</td><td class="n comun">80</td><td class="n comun">4</td><td class="n comun">30 oro</td><td class="n comun">4</td></tr>
+    </tbody></table></div>
+    <div class="balanza"><div><span class="eti">Mejor</span>Casi una caballería pesada desde el nivel 1, y +10 de defensa contra flechas.</div><div><span class="eti">Peor</span>Cuesta 45 de oro: al principio de la partida, tener dos es un lujo.</div></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtida</span>Tras atacar, puede retirarse un hexágono.</div><div><span class="eti">Nivel 7 · maestra</span>+10 de ataque contra tropas montadas.</div><div><span class="eti">No tiene</span><span class="falta">Infantería pesada</span>. Su ejército va a caballo.</div></div>
+  </article>
+
+  <!-- MONGOLES -->
+  <article class="ficha" style="--c:var(--mongoles)">
+    <div class="ficha-cab"><i class="escudo">G</i><div><h2>Imperio mongol</h2><p>Mongolia · 2,99 € · líder Gengis Kan · héroe nuevo</p></div></div>
+    <p>Está en todas partes. Es la única facción que se juega a caballo y a distancia a la vez: acosa, dispara y se va antes de que le respondan. La más difícil de manejar y la más vistosa.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Estepa</h3><p>Tus tropas montadas entran en bosques y colinas como si fuera llanura.</p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>El Yam</h3><p>La red de postas: durante este turno, todas tus tropas +2 de movimiento.</p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Arquero a caballo</h3><p>Dispara al galope. Rápido y escurridizo, pero sin armadura ni fuerza para asediar.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Movim.</th><th>Alcance</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Arquero a caballo</td><td class="n up">21</td><td class="n">10</td><td class="n up">42</td><td class="n up">4</td><td class="n">1</td><td class="n down">26 oro</td><td class="n down">3</td></tr>
+      <tr><td class="comun">Arquero (el de siempre)</td><td class="n comun">20</td><td class="n comun">10</td><td class="n comun">40</td><td class="n comun">2</td><td class="n comun">1</td><td class="n comun">20 oro</td><td class="n comun">2</td></tr>
+    </tbody></table></div>
+    <div class="balanza"><div><span class="eti">Mejor</span>El doble de movimiento que un arquero: llega a donde quiere y dispara.</div><div><span class="eti">Peor</span>Los lanceros le hacen +15. No sirve para tomar ciudades.</div></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtida</span>Puede moverse después de disparar, con lo que le quede.</div><div><span class="eti">Nivel 7 · maestra</span>+10 de ataque contra tropas heridas y dispara a 2 hexágonos.</div><div><span class="eti">No tiene</span><span class="falta">Alabardero ni infantería pesada</span>.</div></div>
+    <div class="bloque"><span class="eti">Héroe nuevo</span><h3>Kan de la estepa</h3><p>Montado y a distancia. Ataque 26 · defensa 16 · vida 70 · alcance 1 · movimiento 3. Puede moverse después de disparar. Aura: las tropas montadas pegadas a él, +1 de movimiento al empezar el turno.</p></div>
+  </article>
+
+  <!-- ESLAVOS (15 sep 2026) -->
+  <article class="ficha" style="--c:var(--eslavos)">
+    <div class="ficha-cab"><i class="escudo">V</i><div><h2>Tribus eslavas</h2><p>Europa del Este · 2,99 € · líder Vesna · héroe nuevo</p></div></div>
+    <p>Pelea donde el enemigo no quiere entrar. En el bosque y en las colinas es casi imposible de echar, y su hechicera cura a quien lucha a su lado. En campo abierto y sin caballería pesada, sufre. Ambientada antes de los reinos, para que la sientan suya polacos, ucranianos, rusos, checos… sin ser de ningún país: Vesna es inventada, el escudo es un roble y los colores son de bosque.</p>
+    <div class="dos">
+      <div class="bloque"><span class="eti">Rasgo · nivel 1</span><h3>Hijos del bosque</h3><p>Tus tropas en bosque o colina, +3 de defensa; las que van a pie cruzan el bosque como si fuera llanura.</p></div>
+      <div class="bloque"><span class="eti">Poder del líder · nivel 5</span><h3>Invierno</h3><p>Hasta tu próximo turno, todas las tropas enemigas mueven 1 menos (nunca menos de 1).</p></div>
+    </div>
+    <div class="bloque"><span class="eti">Unidad propia · nivel 1</span><h3>Guardián del bosque</h3><p>Un lancero con un gran escudo de roble: algo mejor en todo y, en el bosque, +5 de defensa.</p></div>
+    <div class="rueda"><table class="stats"><thead><tr><th></th><th>Ataque</th><th>Defensa</th><th>Vida</th><th>Movim.</th><th>Alcance</th><th>Coste</th><th>Mantenim.</th></tr></thead><tbody>
+      <tr><td>Guardián del bosque</td><td class="n up">22</td><td class="n up">33</td><td class="n up">64</td><td class="n">2</td><td class="n">0</td><td class="n down">23 oro</td><td class="n">2</td></tr>
+      <tr><td class="comun">Lancero (el de siempre)</td><td class="n comun">20</td><td class="n comun">30</td><td class="n comun">60</td><td class="n comun">2</td><td class="n comun">0</td><td class="n comun">20 oro</td><td class="n comun">2</td></tr>
+    </tbody></table></div>
+    <div class="mejoras"><div><span class="eti">Nivel 3 · curtida</span>+10 de defensa contra tropas a distancia.</div><div><span class="eti">Nivel 7 · maestra</span>+10 más contra caballería (+25 en total).</div><div><span class="eti">No tiene</span><span class="falta">Caballería pesada</span>.</div></div>
+    <div class="bloque"><span class="eti">Héroe nuevo</span><h3>Vesna, la hechicera</h3><p>Ataque 22 · defensa 11 · vida 55 · alcance 2 · movimiento 2. Rayo que atraviesa armaduras (+8 contra armadura). Al acabar tu turno cura 10 a las tropas propias pegadas a ella.</p></div>
+    <div class="bloque"><span class="eti">Campaña</span><h3>Vesna</h3><p>Diez capítulos: una aldea quemada, la unión de las tribus del bosque y la guerra contra el kagan de los ávaros (un pueblo que ya no existe). Dos mapas nuevos: El Bosque Viejo y La Llanura de los Jinetes. Equilibrio medido: 49 % (nivel 1), 55 % (nivel 5), 53 % (nivel 10).</p></div>
+  </article>
+
+  <section>
+    <h2>El nivel de cuenta</h2>
+    <p>Sube con todos los puntos que ganas, juegues con la facción que juegues. Nada de lo que juegas se pierde por cambiar de facción.</p>
+    <div class="rueda">
+      <table>
+        <thead><tr><th>Cuándo</th><th>Qué da</th></tr></thead>
+        <tbody>
+          <tr><td class="n">Cada 1.000 puntos</td><td>Sube un nivel y da 60 de oro del héroe (hoy un arma de la tienda cuesta 120)</td></tr>
+          <tr><td class="n">Cada 5 niveles</td><td>Un aspecto: colores de armadura, capa o estandarte. Sin efecto en el juego</td></tr>
+          <tr><td class="n">Cada 10 niveles</td><td>+5 de oro inicial en todas las partidas, con todas las facciones, hasta +25</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Las facciones de pago, con oro del héroe: 5.000 cada una. Solo con el nivel de cuenta serían unos 80 niveles: meses de juego. Está puesto a propósito lejos: es la salida para quien no quiere pagar, no la vía normal.</p>
+  </section>
+
+  <section>
+    <h2>La Leyenda de Final War — el nivel 11</h2>
+    <p>Es el <b>nivel 11</b> de la escalera, el escalón que va después del Emperador, y lo ocupa <b>una sola persona en todo el juego</b>: la que ha llegado al nivel 10 con cualquier facción y tiene más puntos que nadie en los últimos 12 meses. Si otro la supera, se la quita.</p>
+    <div class="rueda"><table><thead><tr><th>Qué tiene</th><th>Detalle</th></tr></thead><tbody>
+      <tr><td>Estrella roja y nombre dorado</td><td>En los rankings, en los duelos y en su figura. Juega con las reglas del nivel 10</td></tr>
+      <tr><td>Aviso a todos</td><td>Cuando alguien pasa a ser la Leyenda, lo ve todo el juego</td></tr>
+      <tr><td>Aviso al que la pierde</td><td>"Te han quitado la Leyenda", con el nombre de quien se la quitó</td></tr>
+      <tr><td>Sala de Leyendas</td><td>Todos los que lo han sido y cuántos días. Queda para siempre</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section>
+    <h2>Decidido</h2>
+    <div class="votos">
+      <div><b>Números de las unidades</b><p>Punto de partida; se ajustan con simulaciones.</p></div>
+      <div><b>Qué no tiene cada facción</b><p>Todas pierden algo, también Castilla (trabuquete).</p></div>
+      <div><b>Nombres de los niveles</b><p>Iguales para todas.</p></div>
+      <div><b>Duelos</b><p>Cada uno con su nivel. La búsqueda empareja por nivel ±1; con un amigo, opción de igualar al nivel del más bajo (solo si se marca).</p></div>
+      <div><b>Héroe</b><p>Es el líder de la facción, con su clase.</p></div>
+      <div><b>Oro del héroe</b><p>5.000 por facción de pago; revisar con datos del primer mes.</p></div>
+      <div><b>Cobro</b><p>RevenueCat para Google Play y App Store. Sin cuenta obligatoria para comprar.</p></div>
+      <div><b>Web</b><p>Escaparate: solo las dos gratis; las de pago, "Consíguelas en la app".</p></div>
+      <div><b>Líderes</b><p>Emblema y figura dibujados en el estilo del juego, sin cara realista.</p></div>
+      <div><b>Máquina de asedio</b><p>Se llama trabuquete.</p></div>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,12 @@
+{
+  "appId": "com.techyield.finalwar",
+  "appName": "Final War: Medieval",
+  "webDir": "movil/www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#2b2620"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
