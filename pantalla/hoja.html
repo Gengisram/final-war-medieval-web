@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoja de personajes</title>
+<style>
+  body { margin: 0; padding: 20px; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; background: #f3ecdc; color: #2a2419; }
+  h1 { margin: 0 0 4px; font-size: 22px; } h2 { font-size: 15px; margin: 22px 0 8px; color: #6b6050; text-transform: uppercase; letter-spacing: .5px; }
+  p { margin: 0 0 8px; color: #6b6050; }
+  .fila { display: flex; flex-wrap: wrap; gap: 14px; }
+  .carta { background: #fff; border-radius: 12px; padding: 10px; text-align: center; width: 150px; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+  .carta canvas { width: 130px; height: 130px; display: block; margin: 0 auto 6px; }
+  .carta small { font-size: 11px; color: #6b6050; }
+  .peq canvas { width: 40px; height: 40px; }
+  .peq { width: 60px; padding: 6px; }
+  .mapa { background: #d9cfae; }
+</style>
+</head>
+<body>
+<h1>Hoja de personajes "cabezones"</h1>
+<p>Propuesta para sustituir los iconos actuales. Dibujados con código: se escalan a cualquier tamaño.</p>
+
+<h2>Tropas (tuyas, en azul)</h2>
+<div class="fila" id="tropas"></div>
+<h2>Las mismas, enemigas (ceño)</h2>
+<div class="fila" id="enemigas"></div>
+<h2>Asentamientos</h2>
+<div class="fila" id="asentamientos"></div>
+<h2>Al tamaño del mapa (sobre un hexágono)</h2>
+<div class="fila" id="pequenas"></div>
+<h2>Iconos actuales, para comparar</h2>
+<div class="fila" id="viejos"></div>
+
+<script>
+  var V = "v=" + Date.now();
+  document.write('<script src="iconos.js?' + V + '"><\/script>');
+  document.write('<script src="figuras.js?' + V + '"><\/script>');
+</script>
+<script>
+  const COLORES = { azul: "#2f6fd6", rojo: "#d63b3b" };
+  const tropas = ["campesino", "lancero", "espadachin", "arquero", "caballero", "catapulta"];
+  const asent = ["pueblo", "ciudad", "castillo"];
+  function carta(cont, nombre, dibuja, tam, clase) {
+    const d = document.createElement("div"); d.className = "carta " + (clase || "");
+    const c = document.createElement("canvas"); const px = tam * 2; c.width = px; c.height = px;
+    const ctx = c.getContext("2d"); ctx.scale(2, 2);
+    dibuja(ctx, tam / 2, tam / 2, tam);
+    d.appendChild(c);
+    const t = document.createElement("div"); t.textContent = nombre; d.appendChild(t);
+    cont.appendChild(d);
+  }
+  for (const id of tropas) carta(document.getElementById("tropas"), id, (ctx, x, y, t) => FWM.figuras[id](ctx, x, y + t * .02, t * .4, { color: COLORES.azul }), 130);
+  for (const id of tropas) carta(document.getElementById("enemigas"), id, (ctx, x, y, t) => FWM.figuras[id](ctx, x, y + t * .02, t * .4, { color: COLORES.rojo, enemigo: true }), 130);
+  for (const id of asent) carta(document.getElementById("asentamientos"), id, (ctx, x, y, t) => FWM.figuras[id](ctx, x, y + t * .1, t * .38), 130);
+  // tamaño de mapa: hexágono de 30px de radio con la figura encima
+  function hex(ctx, x, y, r) { ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 180 * (60 * i - 30); ctx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a)); } ctx.closePath(); ctx.fillStyle = "#d9cfae"; ctx.fill(); ctx.strokeStyle = "rgba(0,0,0,.2)"; ctx.stroke(); }
+  for (const id of tropas.concat(asent)) carta(document.getElementById("pequenas"), id, (ctx, x, y, t) => {
+    hex(ctx, x, y, t * .5);
+    if (asent.includes(id)) FWM.figuras[id](ctx, x, y + t * .05, t * .2); else FWM.figuras[id](ctx, x, y, t * .2, { color: COLORES.azul });
+  }, 60, "peq");
+  for (const id of tropas) carta(document.getElementById("viejos"), id, (ctx, x, y, t) => { ctx.fillStyle = COLORES.azul; ctx.beginPath(); ctx.arc(x, y, t * .42, 0, Math.PI * 2); ctx.fill(); (FWM.iconos.I[id] || (() => {}))(ctx, x, y, t * .25, "#fff"); }, 60, "peq");
+  for (const id of asent) carta(document.getElementById("viejos"), id, (ctx, x, y, t) => FWM.iconos.I[id](ctx, x, y, t * .3), 60, "peq");
+</script>
+</body>
+</html>

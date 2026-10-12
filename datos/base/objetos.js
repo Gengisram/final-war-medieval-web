@@ -1,0 +1,111 @@
+// Objetos del héroe. Cuatro tipos equipables (arma, escudo, montura, cabeza), consumibles y de aspecto.
+// Ningún objeto pasa de +3 en nada. Cómo sale: tienda (precio en oro del héroe), botín al acabar, medalla (id:nivel), campaña, liga.
+// efecto: se suma a las mejoras del héroe (mismos nombres que en heroes.js) más: asedio, bonos { etiqueta: valor },
+// guarnicionDefensa (tropas acuarteladas con el héroe), resurreccion (vuelve una vez).
+window.FWM = window.FWM || {};
+FWM.datosBase = FWM.datosBase || {};
+
+FWM.datosBase.objetos = {
+  // 18 sep 2026: precios y efectos con la tabla de valores del banco de pruebas (pruebas/banco/banco.js valores y
+  // valoresHumano: % de victorias de más que da cada efecto en el héroe). Lo que más vale es aguantar (vida, defensa),
+  // la economía (oro por turno) y moverse; el ataque casi no cambia nada y los bonos contra un tipo, poco. Regla:
+  // unos 30 de oro del héroe por cada punto de victoria de más. Rarezas (28 sep 2026): común hasta 150, poco común hasta
+  // 300, raro hasta 450, épico por encima y los grandes premios (liga, final de campaña).
+  // Por huecos, del más barato al más caro. Los bonos contra un tipo de tropa bajan a +5 (antes +15: absurdo).
+  espada_hierro: { nombre: "Espada de hierro", tipo: "arma", rareza: "comun", efecto: { ataque: 2 }, texto: "+2 de ataque", tienda: 90, botin: true, dibujo: "espada" },
+  lanza_larga: { nombre: "Lanza larga", tipo: "arma", rareza: "comun", efecto: { bonos: { montada: 5 } }, texto: "+5 contra caballería", tienda: 90, botin: true, dibujo: "lanza" },
+  hacha: { nombre: "Hacha de leñador", tipo: "arma", rareza: "comun", efecto: { asedio: 10 }, texto: "+10 de asedio", tienda: 90, botin: true, dibujo: "hacha" },
+  maza: { nombre: "Maza de guerra", tipo: "arma", rareza: "comun", efecto: { bonos: { armadura: 5 }, asedio: 5 }, texto: "+5 contra tropas con armadura, +5 de asedio", tienda: 120, botin: true, dibujo: "maza" },
+  sable: { nombre: "Sable de jinete", tipo: "arma", rareza: "comun", efecto: { bonos: { a_pie: 5 } }, texto: "+5 contra tropas a pie", tienda: 150, dibujo: "sable" },
+  // 28 sep 2026: veinte objetos más en la tienda (Rodrigo). Cuatro rarezas por lo que valen: común hasta 150 de oro,
+  // poco común hasta 300, raro hasta 450 y épico por encima (y los grandes premios). Solo efectos que ya existen.
+  estoque: { nombre: "Estoque", tipo: "arma", rareza: "comun", efecto: { bonos: { armadura: 5 } }, texto: "+5 contra tropas con armadura", tienda: 100, dibujo: "estoque" },
+  alfanje: { nombre: "Alfanje", tipo: "arma", rareza: "poco_comun", efecto: { ataque: 1, bonos: { a_pie: 5 } }, texto: "+1 de ataque, +5 contra tropas a pie", tienda: 190, dibujo: "alfanje" },
+  maza_mando: { nombre: "Maza de mando", tipo: "arma", rareza: "poco_comun", efecto: { ataque: 1, auraExperiencia: 1 }, texto: "+1 de ataque; tropas pegadas +1 de experiencia por combate", tienda: 220, dibujo: "maza_mando" },
+  hacha_danesa: { nombre: "Hacha danesa", tipo: "arma", rareza: "poco_comun", efecto: { ataque: 2, asedio: 15 }, texto: "+2 de ataque, +15 de asedio", tienda: 230, dibujo: "hacha_danesa" },
+  lanza_caballero: { nombre: "Lanza de caballero", tipo: "arma", rareza: "poco_comun", efecto: { ataque: 2, bonos: { a_pie: 5 } }, texto: "+2 de ataque, +5 contra tropas a pie", tienda: 240, dibujo: "lanza_caballero" },
+  espada_toledo: { nombre: "Espada de Toledo", tipo: "arma", rareza: "epico", efecto: { ataque: 3, defensa: 1, vida: 5 }, texto: "+3 de ataque, +1 de defensa, +5 de vida", tienda: 460, dibujo: "toledo" },
+  espada_larga: { nombre: "Espada larga", tipo: "arma", rareza: "poco_comun", efecto: { ataque: 3, vida: 5 }, texto: "+3 de ataque, +5 de vida", tienda: 260, dibujo: "espada_larga" },
+  martillo: { nombre: "Martillo de asedio", tipo: "arma", rareza: "poco_comun", efecto: { asedio: 20, ataque: 1 }, texto: "+20 de asedio, +1 de ataque", tienda: 250, dibujo: "martillo" },
+  espada_capitan: { nombre: "Espada del capitán", tipo: "arma", rareza: "poco_comun", efecto: { ataque: 2, auraAtaque: 1 }, texto: "+2 de ataque; tropas pegadas +1 de ataque", medalla: "carnicero:3", dibujo: "espada_oro" },
+  mandoble: { nombre: "Mandoble", tipo: "arma", rareza: "epico", efecto: { ataque: 3, vida: 10 }, texto: "+3 de ataque, +10 de vida", liga: 1, dibujo: "mandoble" },
+  rodela: { nombre: "Rodela", tipo: "escudo", rareza: "comun", efecto: { defensa: 1 }, texto: "+1 de defensa", tienda: 140, botin: true, dibujo: "rodela" },
+  escudo_puas: { nombre: "Escudo de púas", tipo: "escudo", rareza: "poco_comun", efecto: { defensa: 1, ataque: 1 }, texto: "+1 de defensa, +1 de ataque", tienda: 170, dibujo: "puas" },
+  escudo_reforzado: { nombre: "Escudo reforzado", tipo: "escudo", rareza: "poco_comun", efecto: { defensa: 2 }, texto: "+2 de defensa", tienda: 280, dibujo: "reforzado" },
+  escudo_torre: { nombre: "Escudo de torre", tipo: "escudo", rareza: "poco_comun", efecto: { defensa: 1, defensaDistancia: 3 }, texto: "+1 de defensa, y +3 más contra tropas a distancia", medalla: "intacto:1", dibujo: "torre" },
+  escudo_blason: { nombre: "Escudo del blasón", tipo: "escudo", rareza: "poco_comun", efecto: { guarnicionDefensa: 2 }, texto: "+2 de defensa a las tropas acuarteladas con el héroe", tienda: 300, dibujo: "blason" },
+  adarga: { nombre: "Adarga", tipo: "escudo", rareza: "comun", efecto: { defensaDistancia: 3 }, texto: "+3 de defensa contra tropas a distancia", tienda: 110, dibujo: "adarga" },
+  escudo_roble: { nombre: "Escudo de roble", tipo: "escudo", rareza: "comun", efecto: { vida: 5 }, texto: "+5 de vida", tienda: 140, dibujo: "roble" },
+  paves: { nombre: "Pavés", tipo: "escudo", rareza: "poco_comun", efecto: { defensaDistancia: 3, auraAtrincherada: 1 }, texto: "+3 de defensa contra tropas a distancia; tropas pegadas y atrincheradas +1 de defensa", tienda: 240, dibujo: "paves" },
+  escudo_cometa: { nombre: "Escudo de cometa", tipo: "escudo", rareza: "poco_comun", efecto: { defensa: 1, vida: 5 }, texto: "+1 de defensa, +5 de vida", tienda: 280, dibujo: "cometa" },
+  escudo_hermandad: { nombre: "Escudo de la hermandad", tipo: "escudo", rareza: "raro", efecto: { defensa: 1, auraDefensa: 1 }, texto: "+1 de defensa; tropas pegadas +1 de defensa", tienda: 320, dibujo: "hermandad" },
+  egida: { nombre: "Égida", tipo: "escudo", rareza: "epico", efecto: { defensa: 3 }, texto: "+3 de defensa", liga: 2, dibujo: "egida" },
+  mula: { nombre: "Mula", tipo: "montura", rareza: "comun", efecto: { vida: 5 }, texto: "+5 de vida", tienda: 150, botin: true, dibujo: "mula" },
+  poni: { nombre: "Poni", tipo: "montura", rareza: "poco_comun", efecto: { vida: 10 }, texto: "+10 de vida", tienda: 280, dibujo: "poni" },
+  caballo: { nombre: "Caballo", tipo: "montura", rareza: "raro", efecto: { movimiento: 1 }, requiereMonta: true, texto: "Vas a dos casillas en vez de a una. Requiere Monta", tienda: 320, medalla: "relampago:3", dibujo: "caballo" },
+  caballo_barda: { nombre: "Caballo con barda", tipo: "montura", rareza: "epico", efecto: { movimiento: 1, defensa: 1 }, requiereMonta: true, texto: "Vas a dos casillas, +1 de defensa. Requiere Monta", tienda: 520, dibujo: "barda" },
+  caballo_tiro: { nombre: "Caballo de tiro", tipo: "montura", rareza: "comun", efecto: { asedio: 15 }, texto: "+15 de asedio: arrastra el ariete", tienda: 140, dibujo: "tiro" },
+  asno: { nombre: "Asno del buhonero", tipo: "montura", rareza: "poco_comun", efecto: { oro: 1 }, texto: "+1 de oro por turno: va cargado de mercancía", tienda: 300, dibujo: "asno" },
+  camello: { nombre: "Camello", tipo: "montura", rareza: "raro", efecto: { vida: 10, bonos: { montada: 5 } }, texto: "+10 de vida, +5 contra caballería: los caballos se asustan de los camellos", tienda: 370, dibujo: "camello" },
+  caballo_estepa: { nombre: "Caballo de la estepa", tipo: "montura", rareza: "epico", efecto: { movimiento: 1, ataque: 1, vida: 5 }, requiereMonta: true, texto: "Vas a dos casillas, +1 de ataque, +5 de vida. Requiere Monta", tienda: 510, dibujo: "estepa" },
+  // el corcel es el caballo con barda y además +10 de vida (Rodrigo, 23 sep 2026)
+  corcel: { nombre: "Corcel de guerra", tipo: "montura", rareza: "epico", efecto: { movimiento: 1, defensa: 1, vida: 10 }, requiereMonta: true, texto: "Vas a dos casillas, +1 de defensa, +10 de vida. Requiere Monta", campana: 8, dibujo: "corcel" },
+  gorro_lana: { nombre: "Gorro de lana", tipo: "cabeza", rareza: "comun", efecto: { vida: 5 }, texto: "+5 de vida", tienda: 150, botin: true, dibujo: "gorro" },
+  casco_hierro: { nombre: "Casco de hierro", tipo: "cabeza", rareza: "comun", efecto: { defensa: 1 }, texto: "+1 de defensa", tienda: 140, dibujo: "casco_hierro" },
+  yelmo: { nombre: "Yelmo", tipo: "cabeza", rareza: "poco_comun", efecto: { defensa: 1, vida: 5 }, texto: "+1 de defensa, +5 de vida", tienda: 280, dibujo: "yelmo" },
+  yelmo_cimera: { nombre: "Yelmo con cimera", tipo: "cabeza", rareza: "raro", efecto: { defensa: 1, auraAtaque: 1 }, texto: "+1 de defensa; tropas pegadas +1 de ataque", tienda: 320, dibujo: "cimera" },
+  diadema: { nombre: "Diadema del tesorero", tipo: "cabeza", rareza: "poco_comun", efecto: { oro: 1 }, texto: "+1 de oro por turno", tienda: 300, dibujo: "diadema" },
+  capucha: { nombre: "Capucha de cuero", tipo: "cabeza", rareza: "comun", efecto: { defensaDistancia: 3 }, texto: "+3 de defensa contra tropas a distancia", tienda: 110, dibujo: "capucha" },
+  sombrero_peregrino: { nombre: "Sombrero de peregrino", tipo: "cabeza", rareza: "comun", efecto: { curaCasa: 2 }, texto: "Tus tropas en territorio propio curan +2 más", tienda: 120, dibujo: "sombrero" },
+  turbante: { nombre: "Turbante", tipo: "cabeza", rareza: "poco_comun", efecto: { segundoAliento: 5 }, texto: "El héroe cura 5 al empezar tu turno si no atacó", tienda: 250, dibujo: "turbante" },
+  cofia_malla: { nombre: "Cofia de malla", tipo: "cabeza", rareza: "poco_comun", efecto: { vida: 5, defensaDistancia: 2 }, texto: "+5 de vida, +2 de defensa contra tropas a distancia", tienda: 200, dibujo: "cofia" },
+  corona_hierro: { nombre: "Corona de hierro", tipo: "cabeza", rareza: "raro", efecto: { auraAtaque: 1, auraDefensa: 1 }, texto: "Tropas pegadas +1 de ataque y +1 de defensa", tienda: 380, dibujo: "corona_hierro" },
+  corona_laurel: { nombre: "Corona de laurel", tipo: "cabeza", rareza: "raro", efecto: { oro: 1, vida: 5 }, texto: "+1 de oro por turno, +5 de vida", medalla: "del_dia:3", dibujo: "laurel" },
+  corona_rey: { nombre: "Corona del rey", tipo: "cabeza", rareza: "epico", efecto: { oro: 2, defensa: 1 }, texto: "+2 de oro por turno, +1 de defensa", campana: 10, dibujo: "corona_rey" },
+  // 7 oct 2026 (Rodrigo): diez objetos "la hostia", carísimos, que se saltan la regla de +3. Y consumibles nuevos:
+  // los de `alEmpezar` actúan al empezar la partida y se gastan en ese momento; la Reliquia no se gasta nunca.
+  tizona: { nombre: "Tizona", tipo: "arma", rareza: "epico", efecto: { ataque: 6, vida: 10 }, texto: "+6 de ataque, +10 de vida", tienda: 1200, dibujo: "espada_oro" },
+  durandal: { nombre: "Durandal", tipo: "arma", rareza: "epico", efecto: { ataque: 5, defensa: 2, auraAtaque: 2 }, texto: "+5 de ataque, +2 de defensa; tropas pegadas +2 de ataque", tienda: 1600, dibujo: "toledo" },
+  lanza_longinos: { nombre: "Lanza de Longinos", tipo: "arma", rareza: "epico", efecto: { ataque: 4, bonos: { a_pie: 10, montada: 10 } }, texto: "+4 de ataque, +10 contra tropas a pie y +10 contra caballería", tienda: 1000, dibujo: "lanza_caballero" },
+  escudo_roldan: { nombre: "Escudo de Roldán", tipo: "escudo", rareza: "epico", efecto: { defensa: 4, vida: 10 }, texto: "+4 de defensa, +10 de vida", tienda: 1300, dibujo: "blason" },
+  paves_temple: { nombre: "Pavés del Temple", tipo: "escudo", rareza: "epico", efecto: { defensa: 3, defensaDistancia: 5, auraDefensa: 2 }, texto: "+3 de defensa, +5 contra flechas; tropas pegadas +2 de defensa", tienda: 1500, dibujo: "paves" },
+  babieca: { nombre: "Babieca", tipo: "montura", rareza: "epico", efecto: { movimiento: 1, ataque: 3, vida: 20 }, requiereMonta: true, texto: "Vas a dos casillas, +3 de ataque, +20 de vida. Requiere Monta", tienda: 1800, dibujo: "babieca" },
+  elefante: { nombre: "Elefante de guerra", tipo: "montura", rareza: "epico", efecto: { movimiento: 1, defensa: 2, vida: 30, asedio: 15 }, requiereMonta: true, texto: "Vas a dos casillas, +2 de defensa, +30 de vida, +15 de asedio. Requiere Monta", tienda: 1500, dibujo: "elefante" },
+  yelmo_cid: { nombre: "Yelmo del Cid", tipo: "cabeza", rareza: "epico", efecto: { defensa: 3, vida: 15, defensaDistancia: 5 }, texto: "+3 de defensa, +15 de vida, +5 contra flechas", tienda: 1100, dibujo: "yelmo" },
+  corona_carlomagno: { nombre: "Corona de Carlomagno", tipo: "cabeza", rareza: "epico", efecto: { oro: 4, defensa: 2, auraAtaque: 1, auraDefensa: 1 }, texto: "+4 de oro por turno, +2 de defensa; tropas pegadas +1 de ataque y +1 de defensa", tienda: 2000, dibujo: "corona_rey" },
+  reliquia_santiago: { nombre: "Reliquia de Santiago", tipo: "consumible", rareza: "epico", efecto: {}, resurreccion: { vidaCompleta: true }, seGasta: false, texto: "Si el héroe muere, vuelve a la capital con toda la vida. Una vez por partida, y no se gasta nunca.", tienda: 3000, dibujo: "reliquia" },
+  bolsa_tesorero: { nombre: "Bolsa del tesorero", tipo: "consumible", rareza: "comun", efecto: {}, alEmpezar: { oro: 40 }, texto: "Empiezas la partida con 40 de oro más. Se gasta al usarla.", tienda: 150, dibujo: "bolsa" },
+  cuerno_leva: { nombre: "Cuerno de leva", tipo: "consumible", rareza: "poco_comun", efecto: {}, alEmpezar: { tropas: ["lancero", "arquero"] }, texto: "Empiezas la partida con un lancero y un arquero más en tu capital. Se gasta al usarlo.", tienda: 250, dibujo: "cuerno" },
+  diezmo: { nombre: "Diezmo del obispo", tipo: "consumible", rareza: "raro", efecto: { oro: 2 }, alEmpezar: {}, texto: "+2 de oro por turno durante esta partida. Se gasta al usarlo.", tienda: 300, dibujo: "cruz" },
+  pocima: { nombre: "Pócima de resurrección", tipo: "consumible", rareza: "raro", efecto: { resurreccion: 1 }, texto: "Si el héroe muere, vuelve a la capital al turno siguiente con la mitad de la vida. Se gasta al usarla.", tienda: 400, botin: "raro", dibujo: "pocima" },
+  capa_embajador: { nombre: "Capa del embajador", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: capa verde y oro", medalla: "tres_bandos:3", dibujo: "capa_verde" },
+  // aspectos del nivel de cuenta (13 sep 2026): uno cada cinco niveles, sin efecto en el juego
+  capa_granate: { nombre: "Capa granate", tipo: "aspecto", rareza: "comun", efecto: {}, texto: "Solo aspecto: capa granate", cuenta: 5, dibujo: "capa_granate" },
+  capa_azul: { nombre: "Capa azul de viaje", tipo: "aspecto", rareza: "poco_comun", efecto: {}, texto: "Solo aspecto: capa azul", cuenta: 10, dibujo: "capa_azul" },
+  estandarte_leon: { nombre: "Estandarte del león", tipo: "aspecto", rareza: "poco_comun", efecto: {}, texto: "Solo aspecto: un estandarte con un león a la espalda", cuenta: 15, dibujo: "estandarte_leon" },
+  capa_armino: { nombre: "Capa de armiño", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: capa blanca moteada, de rey", cuenta: 20, dibujo: "capa_armino" },
+  manto_estrellas: { nombre: "Manto de estrellas", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: manto azul noche con estrellas", cuenta: 25, dibujo: "manto_estrellas" },
+  capa_oro: { nombre: "Capa de oro", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: capa dorada", cuenta: 30, dibujo: "capa_oro" },
+  // aspectos de las campañas de las facciones (13 sep 2026): el capítulo 8 y el 10 de cada una
+  capa_lobo: { nombre: "Piel de lobo", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: una piel de lobo sobre los hombros", campana: 8, campanaDe: "vikingos", dibujo: "capa_lobo" },
+  estandarte_dragon: { nombre: "Estandarte del dragón", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: el estandarte de Harald, un dragón negro sobre rojo", campana: 10, campanaDe: "vikingos", dibujo: "estandarte_dragon" },
+  capa_arquero: { nombre: "Capa del arquero", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: capa verde de los bosques", campana: 8, campanaDe: "inglaterra", dibujo: "capa_arquero" },
+  capa_leones: { nombre: "Capa de los leones", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: capa roja con leones de oro", campana: 10, campanaDe: "inglaterra", dibujo: "capa_leones" },
+  capa_indigo: { nombre: "Manto añil", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: manto teñido de añil", campana: 8, campanaDe: "mali", dibujo: "capa_indigo" },
+  manto_dorado: { nombre: "Manto de oro de Malí", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: el manto de oro del primer rey de Malí", campana: 10, campanaDe: "mali", dibujo: "manto_dorado" },
+  capa_seda: { nombre: "Capa de seda", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: seda verde de Damasco", campana: 8, campanaDe: "saladino", dibujo: "capa_seda" },
+  capa_aguila: { nombre: "Capa del águila", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: capa amarilla con el águila de Saladino", campana: 10, campanaDe: "saladino", dibujo: "capa_aguila" },
+  capa_fieltro: { nombre: "Capa de fieltro", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: fieltro de la estepa, bueno para el frío", campana: 8, campanaDe: "mongoles", dibujo: "capa_fieltro" },
+  capa_abedul: { nombre: "Capa de abedul", tipo: "aspecto", rareza: "raro", efecto: {}, texto: "Solo aspecto: lana teñida del color de la corteza de abedul", campana: 8, campanaDe: "eslavos", dibujo: "capa_abedul" },
+  manto_primavera: { nombre: "Manto de la primavera", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: el manto verde de la que trajo la primavera a las tribus", campana: 10, campanaDe: "eslavos", dibujo: "manto_primavera" },
+  capa_estepa: { nombre: "Manto del kan", tipo: "aspecto", rareza: "epico", efecto: {}, texto: "Solo aspecto: el manto azul cielo del kan de todas las tribus", campana: 10, campanaDe: "mongoles", dibujo: "capa_estepa" },
+};
+
+FWM.datosBase.objetosReglas = {
+  tipos: ["arma", "escudo", "montura", "cabeza", "consumible", "aspecto"],
+  rarezas: { comun: "Común", poco_comun: "Poco común", raro: "Raro", epico: "Épico" },
+  // botín al acabar una partida: probabilidad base y extras
+  botin: { pierde: 0.03, gana: 0.08, dia: 0.02, duelo: 0.02, raro: 0.10, repetidoOro: 30 },
+  // oro del héroe por partida
+  oro: { porcentajeOroFinal: 0.05, ganar: 10, dia: 5, dueloHumano: 10 },
+};
