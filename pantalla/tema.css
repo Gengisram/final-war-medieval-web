@@ -1,0 +1,205 @@
+/* ===== Rediseño del 25 oct 2026 =====
+   Maqueta elegida: rediseno-versiones.html, versión 2 ("colores del juego actual"). Va DESPUÉS de estilos.css y la
+   pisa: misma paleta de pergamino, burdeos y barra oscura, pero tarjetas limpias de esquinas redondas con sombra suave,
+   iconos en círculos de color con dibujo de línea, títulos en Fraunces y texto en Manrope, y la islita de hexágonos
+   arriba del inicio. Lo que no se toca aquí sigue como estaba. */
+
+/* Fraunces y Manrope (SIL OFL), en fuentes/: el juego sigue sin pedir nada fuera y funciona sin conexión */
+@font-face { font-family: "Fraunces"; src: url(../fuentes/fraunces-latin.woff2) format("woff2"); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: "Manrope"; src: url(../fuentes/manrope-latin.woff2) format("woff2"); font-weight: 500 800; font-display: swap; }
+:root {
+  --tipo-titulo: "Fraunces", Georgia, "Times New Roman", serif;
+  --tipo-texto: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --panel: #fcf9f1;
+  --panel-borde: #d8c9a6;
+  --tinta-suave: #6b6050;
+  --radio: 12px;
+  --papel: #fcf9f1;
+  --tarjeta-sombra: inset 0 0 0 1px #e2d6b8, 0 6px 18px rgba(42, 36, 25, .10), 0 1px 0 rgba(179, 160, 122, .5);
+}
+h1, h2, h3, .perfil-nombre, .inicio-modo .nombre, .batalla-card h3, .heroe-card h3 { font-family: var(--tipo-titulo); font-weight: 700; letter-spacing: 0; }
+.btn { font-family: var(--tipo-texto); font-weight: 700; border-radius: 12px; }
+.btn-primario { font-weight: 800; }
+.inicio-modo .dato, .inicio-seccion, .misiones-tit, .punto-aviso { font-family: var(--tipo-texto); }
+
+/* ---------- la caja del menú ---------- */
+#inicio { background: #e4d8bd; }
+#inicio-caja { background: linear-gradient(180deg, #9db8c9 0px, #c9d3c4 150px, #e4d8bd 230px, #ddd0b2 100%); box-shadow: 0 12px 40px rgba(0,0,0,.18); }
+#inicio-caja .reino-sec, #inicio-caja .misiones, #inicio-caja .inicio-heroe, #inicio-caja .aviso-cuenta,
+#inicio-caja .heroe-mejora:not(.tiene):not(.elegida):not(.completa), #inicio-caja .heroe-slot:not(.lleno), #inicio-caja .medalla:not(.ganada) { background: var(--papel); }
+#inicio-titulo, #inicio-desfile, #inicio-sub { display: none !important; }
+#inicio-caja .btn-claro { background: #ece2cb; box-shadow: inset 0 0 0 1px #d8c9a6; color: var(--tinta); }
+#inicio-caja .btn-claro:hover { background: #f3ebd6; }
+
+/* la islita de la cabecera, con el nombre del juego */
+.inicio-isla { position: relative; height: 178px; margin: -22px -22px 0; flex: none; }
+.inicio-isla .isla-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.isla-logo { position: absolute; left: 0; right: 0; top: 16px; text-align: center; line-height: 1; pointer-events: none; }
+.isla-logo b { display: block; font-family: var(--tipo-titulo); font-weight: 700; font-size: 32px; color: #2a2419; letter-spacing: .3px; }
+.isla-logo span { display: block; font-size: 11px; font-weight: 800; letter-spacing: 5px; color: #8b1a1a; margin-top: 5px; }
+@media (max-width: 760px) { .inicio-isla { margin: calc(-14px - env(safe-area-inset-top)) -14px 0; padding-top: env(safe-area-inset-top); height: calc(178px + env(safe-area-inset-top)); } .inicio-isla .isla-svg { top: env(safe-area-inset-top); height: 178px; } .isla-logo { top: calc(16px + env(safe-area-inset-top)); } }
+
+/* fila de la cuenta: avatar, nombre y nivel de cuenta; a la derecha el oro y la tienda */
+#inicio-caja .inicio-yo { display: flex; flex-wrap: nowrap; align-items: center; justify-content: flex-start; gap: 8px; background: transparent; border: 0; box-shadow: none; padding: 0 2px; text-align: left; font-size: 14px; }
+#inicio-caja .inicio-yo:hover { background: transparent; }
+.inicio-yo > * + *:not(.ic-tienda)::before { content: none !important; }
+.ic-avatar { width: 34px; height: 34px; border-radius: 50%; background: #f0d9c9; overflow: hidden; flex: none; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+.ic-avatar canvas { position: absolute; width: 52px !important; height: 52px !important; left: -9px; top: -2px; }
+#inicio-caja .inicio-yo .ic-nombre { font-family: var(--tipo-texto); font-weight: 800; font-size: 16px; max-width: 34vw; }
+.inicio-yo .ic-nivel { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.inicio-yo .ic-hueco { flex: 1; }
+.ficha-oro { display: inline-flex; align-items: center; gap: 5px; background: #f3dc8f; color: #6b4e00; font-weight: 800; font-size: 15px; padding: 4px 11px 4px 5px; border-radius: 99px; font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--tipo-texto); }
+.ficha-oro .moneda { flex: none; }
+#inicio-caja .inicio-yo .ic-tienda, .cabecera-tienda { width: 36px; height: 36px; padding: 0; border-radius: 50%; background: var(--papel); color: var(--tinta); box-shadow: var(--tarjeta-sombra); display: inline-grid; place-items: center; flex: none; }
+#inicio-caja .inicio-yo .ic-tienda:hover, .cabecera-tienda:hover { background: #fff; }
+.cabecera-tienda { font-size: 0; gap: 0; margin-left: 8px; }
+.cabecera-tienda svg { width: 18px; height: 18px; }
+.inicio-vista-titulo .cabecera-oro { margin-left: auto; font-size: 15px; }
+
+/* el retrato: el héroe de pie sobre su casilla, con la bandera de su facción detrás */
+.retrato { position: relative; flex: none; margin: 0 auto; }
+.retrato > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.retrato .retrato-heroe { position: absolute; max-width: none !important; }
+
+/* tarjeta de la facción en el inicio */
+#inicio-caja .inicio-heroe { grid-template-columns: 118px minmax(0, 1fr); gap: 14px; min-height: 0; padding: 14px 16px; border: 0; border-radius: 16px; box-shadow: var(--tarjeta-sombra); }
+#inicio-caja .inicio-heroe:hover { background: #fff; }
+.ih-fac { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--acento); min-width: 0; }
+.ih-fac svg { flex: none; }
+.ih-fac span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ih-lider { margin: 3px 0 2px; font-size: 24px; line-height: 1.05; color: var(--tinta); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.ih-rango { font-size: 13px; font-weight: 700; color: var(--tinta-suave); }
+.ih-doble { display: inline-block; font-size: 11px; font-weight: 800; color: #fff; background: var(--puntos); border-radius: 6px; padding: 0 5px; margin-left: 4px; }
+#inicio-caja .inicio-heroe .heroe-barra { height: 8px; border-radius: 99px; background: #ece2cb; margin-top: 10px; }
+#inicio-caja .heroe-barra i { border-radius: 99px; }
+.ih-pts { display: flex; justify-content: space-between; gap: 8px; width: 100%; font-size: 12px; font-weight: 700; color: var(--tinta-suave); margin-top: 5px; font-variant-numeric: tabular-nums; }
+.ih-juegas { margin-top: 6px; }
+.ih-cambiar-boton { background: none; border: 0; padding: 2px 0; font: 800 12.5px var(--tipo-texto); color: var(--puntos); cursor: pointer; }
+.ih-cambiar-boton:hover { text-decoration: underline; }
+.inicio-heroe-info > .btn { margin-top: 8px; }
+
+/* botón de jugar, enlace de debajo */
+#inicio-caja .inicio-botones > .btn-primario { min-height: 58px; font-family: var(--tipo-titulo); font-size: 22px; font-weight: 700; border-radius: 14px; box-shadow: 0 8px 18px rgba(139, 26, 26, .28), inset 0 -4px 0 rgba(0, 0, 0, .2); }
+#inicio-caja .inicio-botones > .btn-claro { min-height: 50px; font-size: 17px; border-radius: 14px; }
+.inicio-enlace { color: var(--tinta-suave); text-decoration: none; font-weight: 700; }
+.inicio-enlace:hover { color: var(--tinta); }
+
+/* círculo de color con un dibujo de línea en blanco (modos, misiones, lo tuyo) */
+.bola-modo { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--c, #8b1a1a); color: #fff; flex: none; }
+.bola-modo svg { display: block; }
+
+/* misiones de hoy */
+#inicio-caja .misiones { border: 0; border-radius: 16px; box-shadow: var(--tarjeta-sombra); padding: 12px 14px; margin: 4px 0; font-size: 14px; }
+.misiones-tit { display: flex; align-items: center; gap: 12px; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--tinta); margin: 0; padding: 0; }
+.misiones-txt { display: flex; flex-direction: column; line-height: 1.25; text-align: left; }
+.misiones-txt b { font-weight: 800; font-size: 15px; }
+.misiones-txt small { font-size: 12.5px; font-weight: 700; color: var(--tinta-suave); }
+.puntitos { display: flex; gap: 4px; margin-left: auto; }
+.puntitos i { width: 9px; height: 9px; border-radius: 50%; background: #e3d9c2; }
+.puntitos i.si { background: #2e7d32; }
+.misiones-flecha { color: var(--tinta-suave); font-size: 14px; }
+.misiones .mision { font-size: 13px; }
+.misiones .mision.cabecera { margin-top: 10px; }
+.inicio-hoy { font-size: 13px; }
+
+/* secciones y azulejos de los modos */
+#inicio-caja .inicio-seccion { margin: 14px 0 2px; padding-left: 4px; font-size: 13px; font-weight: 800; text-transform: none; letter-spacing: 0; color: var(--tinta-suave); }
+#inicio-caja .inicio-seccion::after { content: none; }
+#inicio-caja .inicio-modos { gap: 12px; grid-auto-rows: auto; }
+#inicio-caja .inicio-modo, #inicio-caja .inicio-retos .inicio-modo { height: auto; min-height: 136px; padding: 14px; gap: 0; border: 0; border-radius: 16px; background: var(--papel); box-shadow: var(--tarjeta-sombra); align-items: flex-start; text-align: left; overflow: hidden; }
+#inicio-caja .inicio-modo:hover { background: #fff; transform: translateY(-1px); }
+#inicio-caja .inicio-retos .inicio-modo::before { content: none; }
+#inicio-caja .inicio-modo .ico { margin: 0 0 12px; }
+#inicio-caja .inicio-modo .bola-modo { width: 44px; height: 44px; }
+#inicio-caja .inicio-modo .nombre, #inicio-caja .inicio-retos .inicio-modo .nombre { font-size: 18px; font-weight: 700; line-height: 1.1; color: var(--tinta); min-height: 0; margin-bottom: 3px; }
+#inicio-caja .inicio-modo .que { font-size: 12.5px; line-height: 1.3; color: var(--tinta-suave); font-weight: 600; -webkit-line-clamp: unset; display: block; }
+#inicio-caja .inicio-modo .dato { margin-top: auto; padding-top: 8px; font-size: 12px; font-weight: 800; text-transform: none; letter-spacing: 0; color: var(--c, var(--acento)); }
+#inicio-caja .inicio-iconos .inicio-icono { border: 0; border-radius: 16px; background: var(--papel); box-shadow: var(--tarjeta-sombra); color: var(--tinta); font-weight: 700; padding: 12px 6px; gap: 6px; }
+#inicio-caja .inicio-iconos .inicio-icono:hover { background: #fff; }
+#inicio-caja .inicio-icono .medallon { background: none; width: 42px; height: 42px; }
+.inicio-icono .bola-modo { width: 42px; height: 42px; }
+#inicio-caja .inicio-pie { border-top: 0; margin-top: 16px; }
+#inicio-caja .inicio-pie .btn { background: transparent; box-shadow: inset 0 0 0 1px #cdbd97; border: 0; border-radius: 99px; padding: 7px 16px; opacity: 1; }
+
+/* barra de abajo: una píldora oscura flotante, la pestaña activa en dorado */
+#inicio-nav { position: sticky; bottom: 12px; margin: 16px 0 6px; padding: 6px; gap: 0; border-top: 0; border-radius: 20px; background: #2b2620; box-shadow: 0 10px 30px rgba(42, 36, 25, .32); }
+.nav-btn { height: 56px; margin-top: 0; border-top: 0; border-radius: 14px; color: #b9ab8c; font-size: 11.5px; font-weight: 800; font-family: var(--tipo-texto); }
+.nav-btn.activa { background: rgba(255, 210, 74, .14); color: #ffd24a; border-top-color: transparent; }
+.nav-btn svg { width: 22px; height: 22px; }
+@media (max-width: 760px) {
+  #inicio.con-nav #inicio-nav { margin: 14px 0 0; margin-top: auto; bottom: calc(10px + env(safe-area-inset-bottom)); border-radius: 20px; padding: 6px; }
+  #inicio.con-nav #inicio-vista { padding-bottom: 0; }
+  #inicio.con-nav #inicio-caja { padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+}
+
+/* cabeceras de las demás pantallas */
+.inicio-vista-titulo { margin-bottom: 10px; }
+.inicio-vista-titulo h2 { font-size: 26px; }
+@media (max-width: 760px) { #inicio.con-nav #inicio-caja { padding-top: calc(10px + env(safe-area-inset-top)); } }
+
+/* tarjetas genéricas del menú */
+#inicio-caja .reino-sec { border: 0; border-radius: 16px; box-shadow: var(--tarjeta-sombra); padding: 14px; }
+#inicio-caja .reino-sec h3 { font-family: var(--tipo-texto); font-size: 13px; font-weight: 800; color: var(--tinta-suave); text-transform: none; letter-spacing: 0; }
+
+/* héroe */
+#inicio-caja .heroe-card { padding: 16px; gap: 6px; }
+.heroe-lider { font-size: 28px; }
+#inicio-caja .heroe-card .heroe-barra { height: 8px; border-radius: 99px; background: #ece2cb; }
+.heroe-puesto { gap: 10px; }
+#inicio-caja .heroe-puesto-hueco { border-radius: 16px; border: 2px dashed #d3c4a1; min-height: 72px; }
+#inicio-caja .heroe-puesto-hueco.lleno { border: 0; background: var(--papel); box-shadow: var(--tarjeta-sombra); }
+#inicio-caja .glosario-tabs.segmentado { background: #ddd0b1; border-radius: 12px; padding: 4px; }
+#inicio-caja .segmentado .btn { border-radius: 9px; color: var(--tinta-suave); }
+#inicio-caja .segmentado .btn-primario { background: var(--papel); color: var(--tinta); box-shadow: 0 2px 8px rgba(42, 36, 25, .12); }
+#inicio-caja .heroe-mejora { border-radius: 14px; }
+.puntos-bola { background: var(--puntos); }
+
+/* tienda */
+.tienda-obj { border: 0; border-radius: 16px; background: var(--papel); box-shadow: var(--tarjeta-sombra); }
+.tienda-fig { border-radius: 12px; background: #f1e8d3; }
+.tienda-tipos .btn { border-radius: 99px; }
+.tienda-saldo { font-size: 15px; }
+
+/* ranking */
+.rk-fila { border: 0; border-radius: 12px; background: var(--papel); box-shadow: inset 0 0 0 1px #e2d6b8; }
+.rk-fila.yo { background: #f6e7b0; box-shadow: inset 0 0 0 1.5px #c99a10; }
+.rk-puesto { border-radius: 16px; }
+
+/* campos de formulario */
+.campo select, .campo input, .duelo-input { border-radius: 10px; border: 1px solid #d3c4a1; background: #fffdf6; font-family: var(--tipo-texto); }
+
+/* ---------- ventanas ---------- */
+#modal-caja { background: var(--papel); border-radius: 20px; padding: 18px; box-shadow: 0 18px 50px rgba(0, 0, 0, .35); }
+#modal-caja h2 { font-size: 24px; }
+.modal-cerrar { background: #fff; border: 0; box-shadow: var(--tarjeta-sombra); }
+.campana-meta { border-radius: 14px; }
+
+/* ---------- la partida (fase 2) ---------- */
+#barra { background: #2b2620; }
+#barra-titulo { font-family: var(--tipo-titulo); font-weight: 700; }
+#barra .btn { background: #3f362c; border-radius: 10px; }
+#barra .btn:hover { background: #4d4236; }
+#barra .btn-primario { background: var(--acento); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22); }
+#barra .btn-primario:hover { background: #a52323; }
+.recurso { border-radius: 99px; }
+#aviso { border-radius: 14px; background: rgba(43, 38, 32, .94); box-shadow: 0 8px 24px rgba(0, 0, 0, .25); font-family: var(--tipo-texto); }
+#hoja-caja { background: var(--papel); border-radius: 20px 20px 0 0; padding: 14px; }
+#hoja-caja h2 { font-family: var(--tipo-titulo); font-size: 20px; }
+#hoja-caja h3 { font-family: var(--tipo-texto); font-size: 12px; font-weight: 800; letter-spacing: .5px; }
+.ficha-recluta { border-radius: 12px; background: #fff; border: 0; box-shadow: var(--tarjeta-sombra); }
+.ficha-recluta:hover { box-shadow: inset 0 0 0 1.5px var(--acento), 0 6px 18px rgba(42, 36, 25, .12); }
+.chip { border-radius: 99px; }
+.mapa-boton { border: 0; background: rgba(252, 249, 241, .92); box-shadow: 0 4px 14px rgba(0, 0, 0, .22); }
+#tutorial { border-radius: 16px; }
+.resultado-botones .btn { border-radius: 12px; }
+.ganancia { border-radius: 16px; }
+/* el botón de sonido va arriba a la derecha: las cabeceras le dejan sitio */
+#inicio-caja .inicio-vista-titulo { padding-right: 44px; min-height: 40px; }
+/* tarjetas que aún llevaban marco burdeos de 2 px: ahora como las demás */
+#inicio-caja .batalla-card, .batalla-card { border: 0; border-radius: 16px; background: var(--papel); box-shadow: var(--tarjeta-sombra); padding: 14px; }
+.duelo-estado, .duelo-amigo, .aviso-cuenta { border-radius: 14px; background: var(--papel); border: 0; box-shadow: var(--tarjeta-sombra); }
+.duelo-vivo { border: 0; border-radius: 16px; background: #fdeceb; box-shadow: inset 0 0 0 1.5px rgba(139, 26, 26, .4); }
+.heroe-confirmar { border: 0; border-radius: 16px; box-shadow: inset 0 0 0 1.5px rgba(139, 26, 26, .5), 0 8px 24px rgba(0, 0, 0, .22); }
+.tu-turno-caja { border: 0; border-radius: 20px; background: var(--papel); }
+.campana-meta { border: 0; background: #fff6e2; box-shadow: inset 0 0 0 1.5px rgba(139, 26, 26, .35); }
+.inicio-botones .bat-fac, .bat-faccion { border-radius: 12px; }

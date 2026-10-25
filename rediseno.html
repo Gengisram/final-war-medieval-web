@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rediseño Final War</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #d9dce3; font-family: Nunito, system-ui, sans-serif; color: #1c2033; }
+  .pagina { padding: 28px 16px 60px; }
+  .pagina > h1 { text-align: center; font: 800 24px/1.2 Nunito, sans-serif; margin: 0 0 4px; }
+  .pagina > p { text-align: center; margin: 0 0 28px; color: #565d72; }
+  .fila { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+  .opcion { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 100%; }
+  .opcion h2 { margin: 0; font: 900 20px/1 Nunito, sans-serif; }
+  .opcion h2 small { display: block; font-weight: 600; font-size: 13px; color: #565d72; margin-top: 6px; text-align: center; }
+  .movil { width: 375px; max-width: calc(100vw - 32px); height: 800px; border-radius: 44px; border: 10px solid #101219; overflow: hidden; position: relative; box-shadow: 0 30px 60px rgba(16,18,25,.35); }
+  .pantalla { height: 100%; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; }
+  .pantalla::-webkit-scrollbar { display: none; }
+  .pantalla > * { flex-shrink: 0; }
+  .cuerpo { flex: 1; padding: 14px 14px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* ---------- piezas comunes ---------- */
+  .logo { text-align: center; padding: 18px 0 2px; line-height: .9; }
+  .logo b { display: block; font-size: 38px; letter-spacing: .5px; }
+  .logo span { display: block; font-size: 13px; letter-spacing: 6px; font-weight: 800; margin-top: 4px; }
+  .cuenta { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 10px; border-radius: 18px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex: none; }
+  .cuenta .nombre { font-weight: 900; font-size: 16px; }
+  .cuenta .nivel { font-weight: 800; font-size: 12px; padding: 3px 8px; border-radius: 99px; }
+  .cuenta .esp { flex: 1; }
+  .oro { display: inline-flex; align-items: center; gap: 5px; font-weight: 900; font-size: 15px; padding: 5px 10px 5px 6px; border-radius: 99px; font-variant-numeric: tabular-nums; }
+  .tienda { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; border: 0; }
+  .heroe { position: relative; border-radius: 24px; padding: 14px; display: grid; grid-template-columns: 128px 1fr; gap: 12px; align-items: center; overflow: hidden; }
+  .heroe .figura { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; position: relative; }
+  .heroe .figura svg { width: 118px; height: 118px; position: relative; top: 4px; }
+  .heroe .fac { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; }
+  .heroe .fac svg { width: 18px; height: 21px; flex: none; }
+  .heroe h3 { margin: 4px 0 6px; font-size: 26px; line-height: 1; font-weight: 400; }
+  .rango { display: inline-flex; align-items: center; gap: 5px; font-weight: 800; font-size: 13px; padding: 3px 10px 3px 6px; border-radius: 99px; }
+  .barra { margin-top: 10px; }
+  .barra .pista { height: 10px; border-radius: 99px; overflow: hidden; }
+  .barra .pista i { display: block; height: 100%; width: 87%; border-radius: 99px; }
+  .barra .txt { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; margin-top: 5px; font-variant-numeric: tabular-nums; }
+  .cambio { margin-top: 8px; font-size: 12.5px; font-weight: 800; opacity: .75; }
+  .cambiar { position: absolute; top: 10px; right: 10px; font: 800 12px Nunito, sans-serif; padding: 5px 10px; border-radius: 99px; border: 0; }
+  .jugar { display: block; width: 100%; border: 0; border-radius: 20px; padding: 16px 12px 14px; text-align: center; cursor: pointer; }
+  .jugar b { display: block; font-size: 26px; line-height: 1; letter-spacing: .5px; }
+  .jugar small { display: block; font-size: 13px; font-weight: 800; margin-top: 4px; opacity: .85; }
+  .enlace { text-align: center; font-weight: 800; font-size: 14px; margin-top: -4px; }
+  .misiones { display: flex; align-items: center; gap: 10px; border-radius: 18px; padding: 12px 12px; }
+  .misiones .ico { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+  .misiones .txt { flex: 1; }
+  .misiones .txt b { display: block; font-size: 15px; font-weight: 900; }
+  .segs { display: flex; gap: 4px; margin-top: 6px; }
+  .segs i { flex: 1; height: 6px; border-radius: 99px; }
+  .racha { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; font-size: 13px; padding: 6px 10px; border-radius: 99px; flex: none; }
+  .seccion { font-size: 12px; font-weight: 900; letter-spacing: 1.6px; text-transform: uppercase; margin: 6px 2px -4px; }
+  .modos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .modo { position: relative; border-radius: 20px; padding: 12px; min-height: 138px; display: flex; flex-direction: column; overflow: hidden; }
+  .modo .ic { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; }
+  .modo h4 { margin: 10px 0 2px; font-size: 20px; line-height: 1.05; font-weight: 400; }
+  .modo p { margin: 0; font-size: 12.5px; line-height: 1.3; font-weight: 700; }
+  .modo .meta { margin-top: auto; padding-top: 8px; font-size: 11px; font-weight: 900; letter-spacing: .8px; text-transform: uppercase; }
+  .modo .marca { position: absolute; right: -14px; bottom: -14px; width: 86px; height: 86px; opacity: .14; }
+  .nav { position: sticky; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 8px 16px; }
+  .nav a { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; font-weight: 800; text-decoration: none; padding: 6px 0; border-radius: 14px; }
+  .nav svg { width: 24px; height: 24px; }
+  .puntos { font-weight: 900; }
+
+  /* ---------- A · NOCHE DE BATALLA ---------- */
+  .tA .pantalla { background: radial-gradient(120% 60% at 50% 0%, #2c3a66 0%, #172038 55%, #10172a 100%); color: #eef1ff; }
+  .tA .logo b, .tA h3, .tA h4, .tA .jugar b { font-family: "Lilita One", sans-serif; }
+  .tA .logo b { color: #ffd257; text-shadow: 0 3px 0 #b8741a, 0 6px 14px rgba(0,0,0,.45); }
+  .tA .logo span { color: #9fb0e0; }
+  .tA .cuenta { background: rgba(255,255,255,.06); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+  .tA .nivel { background: #33437a; color: #cdd7ff; }
+  .tA .oro { background: rgba(0,0,0,.3); color: #ffd257; }
+  .tA .tienda { background: #ffd257; color: #5a3a00; box-shadow: 0 3px 0 #b8741a; }
+  .tA .heroe { background: linear-gradient(160deg, #26325a, #1b2442); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 10px 24px rgba(0,0,0,.3); }
+  .tA .heroe .figura { background: radial-gradient(circle at 50% 40%, #ff6b6b 0%, #c8243c 60%, #7d1328 100%); box-shadow: 0 0 0 4px rgba(255,255,255,.08), 0 0 30px rgba(232,66,79,.45); }
+  .tA .fac { color: #ff8c8c; }
+  .tA .rango { background: rgba(255,210,87,.15); color: #ffd257; }
+  .tA .barra .pista { background: rgba(255,255,255,.1); }
+  .tA .barra .pista i { background: linear-gradient(90deg, #3d8bff, #6fc3ff); }
+  .tA .barra .txt { color: #9ba7cc; }
+  .tA .puntos { color: #6fb6ff; }
+  .tA .cambiar { background: rgba(255,255,255,.1); color: #dfe5ff; }
+  .tA .jugar { background: linear-gradient(180deg, #4fe082, #27b25a); color: #fff; box-shadow: 0 6px 0 #16793a, 0 14px 24px rgba(39,178,90,.35); text-shadow: 0 2px 0 rgba(0,0,0,.2); }
+  .tA .enlace { color: #8fb4ff; }
+  .tA .misiones { background: rgba(255,255,255,.06); }
+  .tA .misiones .ico { background: #ff8a3d; color: #fff; }
+  .tA .misiones small { color: #9ba7cc; font-weight: 700; }
+  .tA .segs i { background: rgba(255,255,255,.12); }
+  .tA .racha { background: rgba(255,138,61,.16); color: #ffad6f; }
+  .tA .seccion { color: #7f8cb5; }
+  .tA .modo { color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 8px 18px rgba(0,0,0,.3); }
+  .tA .modo .ic { background: rgba(255,255,255,.22); color: #fff; }
+  .tA .modo p { color: rgba(255,255,255,.85); }
+  .tA .modo .meta { color: rgba(255,255,255,.95); }
+  .tA .modo .marca { color: #fff; opacity: .16; }
+  .tA .m1 { background: linear-gradient(150deg, #ff5f6d, #c81d4e); }
+  .tA .m2 { background: linear-gradient(150deg, #ffa24a, #e0640f); }
+  .tA .m3 { background: linear-gradient(150deg, #2fd0b0, #0c8a78); }
+  .tA .m4 { background: linear-gradient(150deg, #9a7bff, #5a3dd6); }
+  .tA .m5 { background: linear-gradient(150deg, #4cc3ff, #1d6fd6); }
+  .tA .m6 { background: linear-gradient(150deg, #f77cc0, #b92676); }
+  .tA .nav { background: rgba(12,17,32,.92); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.07); }
+  .tA .nav a { color: #7f8cb5; }
+  .tA .nav a.on { color: #ffd257; background: rgba(255,210,87,.1); }
+
+  /* ---------- B · DÍA DE TORNEO ---------- */
+  .tB .pantalla { background: linear-gradient(180deg, #7cc8ff 0%, #b9e3ff 200px, #eef6ff 380px, #f4f8fc 100%); color: #1c2440; font-family: "Baloo 2", sans-serif; }
+  .tB .logo b, .tB h3, .tB h4, .tB .jugar b { font-family: "Baloo 2", sans-serif; font-weight: 800; }
+  .tB .logo b { color: #fff; text-shadow: 0 3px 0 #1b5fb0, 0 0 0 #000, 0 5px 12px rgba(27,95,176,.4); -webkit-text-stroke: 1.5px #1b5fb0; }
+  .tB .logo span { color: #1b5fb0; }
+  .tB .cuenta, .tB .heroe, .tB .misiones { background: #fff; box-shadow: 0 4px 0 rgba(28,36,64,.06), 0 10px 26px rgba(28,60,120,.10); }
+  .tB .nivel { background: #e8f1ff; color: #2f6fd6; }
+  .tB .oro { background: #fff6dc; color: #b07800; }
+  .tB .tienda { background: #ff7a1a; color: #fff; box-shadow: 0 3px 0 #c45508; }
+  .tB .heroe .figura { background: radial-gradient(circle at 50% 40%, #ffe7e7 0%, #ffc9c9 55%, #ffb1b1 100%); }
+  .tB .fac { color: #d6243c; }
+  .tB h3 { font-size: 28px; }
+  .tB .rango { background: #fff3cc; color: #9a6a00; }
+  .tB .barra .pista { background: #e7edf6; }
+  .tB .barra .pista i { background: linear-gradient(90deg, #2f6fd6, #55a6ff); }
+  .tB .barra .txt { color: #6a7596; }
+  .tB .puntos { color: #2f6fd6; }
+  .tB .cambiar { background: #eef3fb; color: #3a4668; }
+  .tB .jugar { background: linear-gradient(180deg, #ff9a3c, #ff6a00); color: #fff; box-shadow: 0 6px 0 #c24e00, 0 14px 24px rgba(255,106,0,.3); text-shadow: 0 2px 0 rgba(150,60,0,.35); }
+  .tB .jugar b { font-size: 28px; }
+  .tB .enlace { color: #2f6fd6; }
+  .tB .misiones .ico { background: #ffe9d6; color: #ff6a00; }
+  .tB .misiones small { color: #6a7596; font-weight: 600; }
+  .tB .segs i { background: #e7edf6; }
+  .tB .racha { background: #fff0e4; color: #e05a00; }
+  .tB .seccion { color: #6a7596; }
+  .tB .modo { background: #fff; box-shadow: 0 4px 0 rgba(28,36,64,.06), 0 10px 22px rgba(28,60,120,.09); }
+  .tB .modo h4 { font-size: 21px; }
+  .tB .modo p { color: #6a7596; font-weight: 600; }
+  .tB .modo .ic { color: #fff; }
+  .tB .modo .marca { opacity: .1; }
+  .tB .m1 .ic { background: #ef3e55; box-shadow: 0 3px 0 #b71f36; } .tB .m1 .meta, .tB .m1 .marca { color: #ef3e55; }
+  .tB .m2 .ic { background: #ff8a1f; box-shadow: 0 3px 0 #c45f00; } .tB .m2 .meta, .tB .m2 .marca { color: #e57300; }
+  .tB .m3 .ic { background: #14b89a; box-shadow: 0 3px 0 #0b7f6b; } .tB .m3 .meta, .tB .m3 .marca { color: #0e9a81; }
+  .tB .m4 .ic { background: #7c5cff; box-shadow: 0 3px 0 #5034d0; } .tB .m4 .meta, .tB .m4 .marca { color: #6a49f0; }
+  .tB .m5 .ic { background: #2f9bff; box-shadow: 0 3px 0 #1a6cc0; } .tB .m5 .meta, .tB .m5 .marca { color: #1f80e0; }
+  .tB .m6 .ic { background: #ec4899; box-shadow: 0 3px 0 #b02068; } .tB .m6 .meta, .tB .m6 .marca { color: #d43586; }
+  .tB .nav { background: #fff; box-shadow: 0 -6px 20px rgba(28,60,120,.08); }
+  .tB .nav a { color: #9aa3bd; }
+  .tB .nav a.on { color: #ff6a00; background: #fff1e6; }
+
+  /* ---------- C · ESTANDARTE (híbrida) ---------- */
+  .tC .pantalla { background: #eef1f7; color: #1d2540; font-family: Nunito, sans-serif; }
+  .tC .logo b, .tC h3, .tC h4, .tC .jugar b { font-family: Fredoka, sans-serif; font-weight: 700; }
+  .tC .cabeza { position: relative; background: linear-gradient(180deg, #1d2a52 0%, #2c3f78 60%, #3a5291 100%); color: #fff; padding: 0 14px 78px; overflow: hidden; }
+  .tC .cabeza .paisaje { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 110px; }
+  .tC .logo b { color: #fff; font-size: 36px; }
+  .tC .logo span { color: #ffcf4a; }
+  .tC .cuenta { background: rgba(255,255,255,.1); margin-top: 10px; position: relative; }
+  .tC .nivel { background: rgba(255,255,255,.16); color: #fff; }
+  .tC .oro { background: rgba(0,0,0,.25); color: #ffcf4a; }
+  .tC .tienda { background: #ffcf4a; color: #4a3200; box-shadow: 0 3px 0 #b88a00; }
+  .tC .cuerpo { margin-top: -56px; position: relative; }
+  .tC .heroe { background: #fff; box-shadow: 0 12px 30px rgba(29,37,64,.16); }
+  .tC .heroe .figura { background: radial-gradient(circle at 50% 35%, #ff7a7a, #d6243c 70%); box-shadow: 0 6px 0 #a8162d; }
+  .tC .fac { color: #d6243c; }
+  .tC h3 { font-size: 27px; }
+  .tC .rango { background: #1d2540; color: #ffcf4a; }
+  .tC .barra .pista { background: #e4e8f1; }
+  .tC .barra .pista i { background: #2f6fd6; }
+  .tC .barra .txt { color: #6b7493; }
+  .tC .puntos { color: #2f6fd6; }
+  .tC .cambiar { background: #eef1f7; color: #3a4466; }
+  .tC .jugar { background: #e5484d; color: #fff; box-shadow: 0 6px 0 #a82c31, 0 14px 24px rgba(229,72,77,.28); }
+  .tC .enlace { color: #2f6fd6; }
+  .tC .misiones { background: #fff; box-shadow: 0 4px 14px rgba(29,37,64,.07); }
+  .tC .misiones .ico { background: #1d2540; color: #ffcf4a; }
+  .tC .misiones small { color: #6b7493; font-weight: 700; }
+  .tC .segs i { background: #e4e8f1; }
+  .tC .racha { background: #fff1e6; color: #e8590c; }
+  .tC .seccion { color: #6b7493; }
+  .tC .modo { color: #fff; }
+  .tC .modo .ic { background: rgba(255,255,255,.2); color: #fff; }
+  .tC .modo p { color: rgba(255,255,255,.85); }
+  .tC .modo .meta { color: #fff; }
+  .tC .modo .marca { color: #fff; opacity: .18; width: 96px; height: 96px; }
+  .tC .m1 { background: #e5484d; box-shadow: 0 5px 0 #a82c31; }
+  .tC .m2 { background: #f08c2e; box-shadow: 0 5px 0 #b3600f; }
+  .tC .m3 { background: #12a38a; box-shadow: 0 5px 0 #0b7363; }
+  .tC .m4 { background: #6e56e8; box-shadow: 0 5px 0 #4b36b3; }
+  .tC .m5 { background: #2f86e0; box-shadow: 0 5px 0 #1d5ea6; }
+  .tC .m6 { background: #1d2540; box-shadow: 0 5px 0 #0c1122; }
+  .tC .nav { background: #1d2540; }
+  .tC .nav a { color: #8a96bd; }
+  .tC .nav a.on { color: #fff; background: #e5484d; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <h1>Final War: Medieval · tres direcciones</h1>
+  <p>La misma pantalla principal, con los mismos datos. Desliza dentro de cada móvil para ver el resto.</p>
+  <div class="fila" id="fila"></div>
+</div>
+
+<script>
+const S = (d, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+const IC = {
+  bandera: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>',
+  espadas: '<polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/>',
+  castillo: '<path d="M22 20v-9H2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2Z"/><path d="M18 11V4H6v7"/><path d="M15 22v-4a3 3 0 0 0-6 0v4"/><path d="M22 11V9M2 11V9M6 4V2M18 4V2M10 4V2M14 4V2"/>',
+  duelo: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  mapa: '<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/>',
+  laurel: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+  escudo: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  bolsa: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  diana: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  llama: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  estrella: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  flecha: '<path d="m9 18 6-6-6-6"/>',
+};
+const moneda = `<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#ffc531" stroke="#a96d00" stroke-width="2"/><circle cx="10" cy="10" r="5" fill="none" stroke="#e09b00" stroke-width="1.8"/></svg>`;
+const escudoCastilla = `<svg viewBox="0 0 40 46"><path d="M4 4h32v18c0 12-8 19-16 22C12 41 4 34 4 22z" fill="#c8102e" stroke="#3a0b14" stroke-width="3" stroke-linejoin="round"/><path d="M12 31V20h3v-3h3v3h4v-3h3v3h3v11z" fill="#ffd24a" stroke="#3a0b14" stroke-width="1.6" stroke-linejoin="round"/><rect x="18.5" y="25" width="3" height="6" fill="#3a0b14"/></svg>`;
+// el héroe de Castilla, con trazo grueso
+const heroe = (o = 4) => `<svg viewBox="0 0 120 124">
+  <ellipse cx="60" cy="116" rx="30" ry="6" fill="rgba(0,0,0,.22)"/>
+  <g stroke="#1b1726" stroke-width="${o}" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M86 92 L108 30" stroke-width="${o + 7}"/><path d="M86 92 L108 30" stroke="#dfe6ee" stroke-width="${o + 2}"/>
+    <path d="M78 86 L96 96" stroke="#f2b90f" stroke-width="${o + 3}"/>
+    <rect x="36" y="68" width="48" height="36" rx="14" fill="#2f6fd6"/>
+    <rect x="36" y="86" width="48" height="7" fill="#7a4a24" stroke-width="${o - 1}"/>
+    <ellipse cx="47" cy="108" rx="10" ry="7" fill="#2b2433"/><ellipse cx="73" cy="108" rx="10" ry="7" fill="#2b2433"/>
+    <circle cx="60" cy="48" r="27" fill="#f8d0aa"/>
+    <path d="M33 47a27 27 0 0 1 54 0z" fill="#d93a3a"/>
+    <rect x="30" y="43" width="60" height="8" rx="4" fill="#a82626"/>
+    <circle cx="30" cy="86" r="13" fill="#d93a3a"/><circle cx="30" cy="86" r="5" fill="#f2b90f" stroke-width="${o - 1.5}"/>
+  </g>
+  <circle cx="51" cy="57" r="3.6" fill="#1b1726"/><circle cx="69" cy="57" r="3.6" fill="#1b1726"/>
+  <circle cx="44" cy="64" r="4.5" fill="#f59a9a" opacity=".7"/><circle cx="76" cy="64" r="4.5" fill="#f59a9a" opacity=".7"/>
+  <path d="M53 66q7 6 14 0" stroke="#1b1726" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>`;
+const paisaje = `<svg class="paisaje" viewBox="0 0 375 110" preserveAspectRatio="none">
+  <path d="M0 70 Q60 40 120 62 T240 52 T375 60 V110 H0Z" fill="#4c66a8" opacity=".55"/>
+  <g fill="#3a5291" opacity=".9"><rect x="262" y="26" width="14" height="40"/><rect x="286" y="34" width="22" height="32"/><rect x="312" y="22" width="14" height="44"/><path d="M262 26h3v-5h3v5h2v-5h3v5h3M312 22h3v-5h3v5h2v-5h3v5h3"/></g>
+  <path d="M0 88 Q90 66 190 84 T375 78 V110 H0Z" fill="#eef1f7"/>
+</svg>`;
+
+function pantalla(t) {
+  const modos = [
+    ["m1", "bandera", "Campaña", "Siete historias, diez mapas cada una", "0 de 10 mapas"],
+    ["m2", "espadas", "Batalla", "Móntala tú: tipo, rivales y equipos", "Sin récord todavía"],
+    ["m3", "castillo", "Grandes batallas", "Europa, la Península, Britannia", "Tres mapas grandes"],
+    ["m4", "duelo", "Duelo online", "Uno contra uno, en directo", "En directo"],
+  ];
+  const semana = [
+    ["m5", "mapa", "Mapa del día", "El mismo mapa para todo el mundo", "Hoy: Castilla o mongoles"],
+    ["m6", "laurel", "Batalla semanal", "Hastings, 1066", "Cambia en 4 días"],
+  ];
+  const tile = ([c, ic, h, p, m]) => `<div class="modo ${c}"><div class="ic">${S(IC[ic], 'width="22" height="22"')}</div><h4>${h}</h4><p>${p}</p><div class="meta">${m}</div>${S(IC[ic], 'class="marca" stroke-width="1.6"')}</div>`;
+  const cuenta = `<div class="cuenta"><div class="avatar" style="background:${t === "B" ? "#ffe2e2" : t === "A" ? "#c8243c" : "#d6243c"}">${heroe(5)}</div><span class="nombre">rod</span><span class="nivel">Nv. 5</span><span class="esp"></span><span class="oro">${moneda}376</span><button class="tienda" aria-label="Tienda">${S(IC.bolsa, 'width="19" height="19"')}</button></div>`;
+  const logo = `<div class="logo"><b>Final War</b><span>MEDIEVAL</span></div>`;
+  const cuerpo = `
+    <div class="heroe">
+      <div class="figura">${heroe(t === "B" ? 3.5 : 4)}</div>
+      <div>
+        <div class="fac">${escudoCastilla}Corona de Castilla</div>
+        <h3>Alfonso VIII</h3>
+        <span class="rango">${S(IC.estrella, 'width="14" height="14" fill="currentColor" stroke-width="1"')}Sargento</span>
+        <div class="barra"><div class="pista"><i></i></div><div class="txt"><span><span class="puntos">3652</span> / 4200</span><span>→ Caballero</span></div></div>
+        <div class="cambio">Cambiar facción ›</div>
+      </div>
+    </div>
+    <button class="jugar"><b>Partida rápida</b><small>3 rivales · 15 turnos</small></button>
+    <div class="enlace">Elegir rivales, tamaño y reglas ›</div>
+    <div class="misiones">
+      <div class="ico">${S(IC.diana, 'width="22" height="22"')}</div>
+      <div class="txt"><b>Misiones de hoy</b><small>0 de 3 · hasta 26 de oro</small><div class="segs"><i></i><i></i><i></i></div></div>
+      <span class="racha">${S(IC.llama, 'width="15" height="15"')}3 días</span>
+    </div>
+    <div class="seccion">Modos de juego</div>
+    <div class="modos">${modos.map(tile).join("")}</div>
+    <div class="seccion">Esta semana</div>
+    <div class="modos">${semana.map(tile).join("")}</div>`;
+  const nav = `<nav class="nav">${[["espadas", "Jugar", 1], ["escudo", "Héroe"], ["bolsa", "Tienda"], ["laurel", "Ranking"]].map(([i, n, on]) => `<a href="#" class="${on ? "on" : ""}">${S(IC[i])}${n}</a>`).join("")}</nav>`;
+  if (t === "C") return `<div class="pantalla"><div class="cabeza">${logo}${cuenta}${paisaje}</div><div class="cuerpo">${cuerpo}</div>${nav}</div>`;
+  return `<div class="pantalla"><div class="cuerpo">${logo}${cuenta}${cuerpo}</div>${nav}</div>`;
+}
+const opciones = [
+  ["A", "A · Noche de batalla", "Fondo azul noche, colores saturados, botón verde de jugar"],
+  ["B", "B · Día de torneo", "Claro y luminoso, tarjetas blancas, botón naranja"],
+  ["C", "C · Estandarte", "Cabecera nocturna con paisaje y cuerpo claro, rojo de Castilla"],
+];
+document.getElementById("fila").innerHTML = opciones.map(([t, h, s]) => `<div class="opcion"><h2>${h}<small>${s}</small></h2><div class="movil t${t}">${pantalla(t)}</div></div>`).join("");
+</script>
+</body>
+</html>
